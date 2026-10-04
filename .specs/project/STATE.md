@@ -45,6 +45,7 @@
 **Reason:** explicit task scope; product code belongs to `munod/tachyone`.
 **Trade-off:** nothing runnable exists here yet.
 **Impact:** `tasks.md` files (skill Tasks phase) are deferred to the implementation repo; `docs/architecture.md` serves as the architecture reference instead.
+**Status:** **superseded 2026-10-03** — the maintainer explicitly requested the Phase 0 run (measurement tooling now lives in `benchmarks/phase0_*.py|sh`, product code still untouched) and provided a dedicated remote (`munod/tachyone_slm`), so `git init` + the first commit happened. The "product code belongs upstream" half of the decision remains in force.
 
 ### WS-AD-006: No invented metrics — placeholders instead (2026-10-03)
 
@@ -123,6 +124,7 @@
 | 004 | Authored root docs (README, CHANGELOG, CONTRIBUTING) + `.gitignore` | 2026-10-03 | — | ✅ Done |
 | 005 | **Phase 0 executed** — clone + env, datasets (golden 46/46), slices, 4 engines × 4 slices, context A/B, report `docs/phase0-baseline.md` | 2026-10-03 | — | ✅ Done |
 | 006 | PRD v1.1.0 → **v1.2.0**: §2 targets fixed, §3.1 context decided, §6/§7/§8 updated | 2026-10-03 | — | ✅ Done |
+| 007 | **Git bootstrap** — `git init -b main`, remote `origin git@github.com:munod/tachyone_slm.git`, initial commit pushed (`2122616`, 71 files / 748 KB); `.opencode/`, `site/` and `logs/` excluded by `.gitignore` | 2026-10-03 | `2122616` | ✅ Done |
 
 ---
 
@@ -144,7 +146,7 @@
 - [ ] Fill `docs/model-card.md` placeholders in Phase 5
 - [ ] Add the SLM engine row to `benchmarks/compare.py` (Phase 5)
 - [ ] Extend `mkdocs.yml` nav as new pages land (`docs/phase0-baseline.md` pending nav entry — WS-B-013)
-- [ ] `git init` + initial commit — **only if/when explicitly requested**
+- [x] `git init` + initial commit — **only if/when explicitly requested** — **done 2026-10-03** (remote `munod/tachyone_slm`, commit `2122616`)
 - [ ] Update ROADMAP statuses as phases start/complete
 
 ---

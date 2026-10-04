@@ -23,7 +23,7 @@
 | WS-B-011 | Measure embedded local engine **vs** external servers (vLLM/TRT-LLM) side by side | P2 | 5 | §5.2 | Open |
 | WS-B-012 | Record stretch `< 8 ms` only with preconditions met (FP8@L4 + minimal output); otherwise mark "not measured / not met" | P2 | 5 | §4.5, §7.3, §8 | Open |
 | WS-B-013 | Extend `mkdocs.yml` nav as new documentation pages land; keep `mkdocs build --strict` green | P3 | ongoing | §6 gates | Open |
-| WS-B-014 | `git init` + first conventional commit of this workspace — **only on explicit request** | P3 | on request | — | Open |
+| WS-B-014 | `git init` + first conventional commit of this workspace — **only on explicit request** | P3 | on request | — | ✅ Done (2026-10-03) — `git init -b main`, remote `git@github.com:munod/tachyone_slm.git`, commit `2122616` pushed |
 | WS-B-015 | **Approve PRD v1.2.0** — Phase 0 fixed the numbers; the approval itself is the last gate of the status line | P0 | 0 | Status line, §7 | Open — closes Phase 0 |
 | WS-B-016 | Wire payload carries **no `max_tokens`** → free-generation clients run away (6,024 tokens/row measured). Cap the engine (`-n 1024`) in every future run, or fix it once the scoring mode lands (Phase 4) | P1 | 4–5 | §3.4, §4.5 | Open — WS-L-002 |
 | WS-B-017 | **English abstained slice has no usable denominator** at τ=0.6 (n=1 / n=4). Decide before Phase 5: higher τ (sweep in `docs/phase0-baseline.md` §1), harder English eval set, or accept a multilingual anchor | P2 | 5 | §2, §8 | Open — WS-AD-008 |
