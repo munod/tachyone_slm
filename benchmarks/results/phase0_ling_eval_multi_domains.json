@@ -1,0 +1,127 @@
+{
+  "calibrated": {
+    "accuracy": 0.3106060606060606,
+    "answered": 148,
+    "brier": 0.4773676663981684,
+    "ece": 0.22260317941550628,
+    "mean_confidence": 0.4463111800279721,
+    "n": 264
+  },
+  "compliance": {
+    "answered": 148,
+    "failed": 116,
+    "rate": 0.560606
+  },
+  "dataset": {
+    "kind": "jsonl",
+    "languages": null,
+    "limit": 0,
+    "path": "/home/thiago/Documentos/Projetos/TachyOne_SLM/benchmarks/results/phase0_slice_eval_multi_domains.jsonl",
+    "per_task": 500,
+    "probe": null,
+    "repo": null,
+    "rows": 264,
+    "split": "test",
+    "val_split": "val",
+    "warmup_excluded": 3
+  },
+  "engine": "llm (ling-tiny)",
+  "engine_config": {
+    "backend": "llm",
+    "base_url": "http://127.0.0.1:8081/v1",
+    "model": "ling-tiny",
+    "retries": 1,
+    "timeout_s": 300.0
+  },
+  "environment": {
+    "command": "/tmp/opencode/tachyone/benchmarks/compare.py run --engine llm --llm-base-url http://127.0.0.1:8081/v1 --llm-model ling-tiny --llm-timeout 300 --format jsonl --data /home/thiago/Documentos/Projetos/TachyOne_SLM/benchmarks/results/phase0_slice_eval_multi_domains.jsonl --per-task 500 --warmup 3 --val-data /home/thiago/Documentos/Projetos/TachyOne_SLM/benchmarks/results/phase0_val_multi.jsonl --out /home/thiago/Documentos/Projetos/TachyOne_SLM/benchmarks/results/phase0_ling_eval_multi_domains.json",
+    "cwd": "/tmp/opencode/tachyone",
+    "gpu": "NVIDIA GeForce RTX 3060",
+    "platform": "Linux-6.12.108-1-MANJARO-x86_64-with-glibc2.44",
+    "processor": "x86_64",
+    "python": "3.12.13",
+    "timestamp": "2026-10-03T22:18:10+00:00",
+    "torch": "2.14.0+cu130",
+    "vram_total_mb": 11906
+  },
+  "latency_ms": {
+    "mean": 7043.943,
+    "n": 261,
+    "p50": 3980.931,
+    "p95": 13179.469
+  },
+  "memory": {
+    "measured_on": "llama-server pid 976830",
+    "peak_rss_mb": 7811.2,
+    "peak_vram_mb": 4922.0
+  },
+  "per_task_calibrated": {
+    "choice": {
+      "accuracy": 0.47305389221556887,
+      "answered": 96,
+      "brier": 0.34342118892619156,
+      "ece": 0.3220004241638972,
+      "mean_confidence": 0.5300829091694361,
+      "n": 167
+    },
+    "noul": {
+      "accuracy": 0.5,
+      "answered": 2,
+      "brier": 0.7455707169987738,
+      "ece": 0.3504074178715212,
+      "mean_confidence": 0.8504074178715212,
+      "n": 2
+    },
+    "score": {
+      "accuracy": 0.021052631578947368,
+      "answered": 50,
+      "brier": 0.7238167811203396,
+      "ece": 0.2569400238076077,
+      "mean_confidence": 0.2693056105626193,
+      "n": 95
+    }
+  },
+  "per_task_raw": {
+    "choice": {
+      "accuracy": 0.47305389221556887,
+      "answered": 96,
+      "brier": 0.1934229166666667,
+      "ece": 0.052604166666666674,
+      "mean_confidence": 0.8192708333333334,
+      "n": 167
+    },
+    "noul": {
+      "accuracy": 0.5,
+      "answered": 2,
+      "brier": 1.0,
+      "ece": 0.5,
+      "mean_confidence": 1.0,
+      "n": 2
+    },
+    "score": {
+      "accuracy": 0.021052631578947368,
+      "answered": 50,
+      "brier": 0.7315999999999999,
+      "ece": 0.254,
+      "mean_confidence": 0.294,
+      "n": 95
+    }
+  },
+  "raw": {
+    "accuracy": 0.3106060606060606,
+    "answered": 148,
+    "brier": 0.3861391891891892,
+    "ece": 0.10641891891891896,
+    "mean_confidence": 0.6442567567567568,
+    "n": 264
+  },
+  "temperature": {
+    "fitted": true,
+    "source": "validation split (capped)",
+    "value": 15.9
+  },
+  "throughput": {
+    "items_per_s": 0.142,
+    "note": "sequential, one question per item, batch=1"
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "candidates": [
+    2048,
+    4096
+  ],
+  "full": {
+    "path": "data/eval_en_domains.jsonl",
+    "rows": 7500,
+    "state": {
+      "max": 861,
+      "mean": 22.7,
+      "n": 7500,
+      "over_2048": 0,
+      "over_4096": 0,
+      "p50": 9.0,
+      "p95": 18.0
+    },
+    "wire": {
+      "max": 1009,
+      "mean": 116.8,
+      "n": 7500,
+      "over_2048": 0,
+      "over_4096": 0,
+      "p50": 87.0,
+      "p95": 162.0
+    },
+    "wire_with_system": {
+      "max": 1427,
+      "mean": 534.8,
+      "n": 7500,
+      "over_2048": 0,
+      "over_4096": 0,
+      "p50": 505.0,
+      "p95": 580.0
+    }
+  },
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "overhead": {
+    "json_overhead_tokens": 60,
+    "system_prompt_source": "tachyone.backends.llm._SYSTEM_PROMPT",
+    "system_prompt_tokens": 418
+  },
+  "slice": {
+    "path": "/home/thiago/Documentos/Projetos/TachyOne_SLM/benchmarks/results/phase0_slice_eval_en_domains.jsonl",
+    "rows": 4,
+    "state": {
+      "max": 410,
+      "mean": 369.0,
+      "n": 4,
+      "over_2048": 0,
+      "over_4096": 0,
+      "p50": 369.0,
+      "p95": 410.0
+    },
+    "wire": {
+      "max": 558,
+      "mean": 502.8,
+      "n": 4,
+      "over_2048": 0,
+      "over_4096": 0,
+      "p50": 499.5,
+      "p95": 555.5
+    },
+    "wire_with_system": {
+      "max": 976,
+      "mean": 920.8,
+      "n": 4,
+      "over_2048": 0,
+      "over_4096": 0,
+      "p50": 917.5,
+      "p95": 973.5
+    }
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "calibrated": {
+    "accuracy": 1.0,
+    "answered": 4,
+    "brier": 0.00020000000001920006,
+    "ece": 0.005000000002989946,
+    "mean_confidence": 0.99499999999701,
+    "n": 4
+  },
+  "compliance": {
+    "answered": 4,
+    "failed": 0,
+    "rate": 1.0
+  },
+  "dataset": {
+    "kind": "jsonl",
+    "languages": null,
+    "limit": 0,
+    "path": "/home/thiago/Documentos/Projetos/TachyOne_SLM/benchmarks/results/phase0_slice_eval_en_domains.jsonl",
+    "per_task": 500,
+    "probe": null,
+    "repo": null,
+    "rows": 4,
+    "split": "test",
+    "val_split": null,
+    "warmup_excluded": 0
+  },
+  "engine": "llm (ornith-9b)",
+  "engine_config": {
+    "backend": "llm",
+    "base_url": "http://127.0.0.1:8082/v1",
+    "model": "ornith-9b",
+    "retries": 1,
+    "timeout_s": 300.0
+  },
+  "environment": {
+    "command": "/tmp/opencode/tachyone/benchmarks/compare.py run --engine llm --llm-base-url http://127.0.0.1:8082/v1 --llm-model ornith-9b --llm-timeout 300 --format jsonl --data /home/thiago/Documentos/Projetos/TachyOne_SLM/benchmarks/results/phase0_slice_eval_en_domains.jsonl --per-task 500 --warmup 0 --temperature 1.0 --out /home/thiago/Documentos/Projetos/TachyOne_SLM/benchmarks/results/phase0_ornith_eval_en_domains.json",
+    "cwd": "/tmp/opencode/tachyone",
+    "gpu": "NVIDIA GeForce RTX 3060",
+    "platform": "Linux-6.12.108-1-MANJARO-x86_64-with-glibc2.44",
+    "processor": "x86_64",
+    "python": "3.12.13",
+    "timestamp": "2026-10-03T23:42:36+00:00",
+    "torch": "2.14.0+cu130",
+    "vram_total_mb": 11906
+  },
+  "latency_ms": {
+    "mean": 3402.018,
+    "n": 4,
+    "p50": 3241.374,
+    "p95": 5089.881
+  },
+  "memory": {
+    "measured_on": "llama-server pid 989574",
+    "peak_rss_mb": 8948.4,
+    "peak_vram_mb": 5512.0
+  },
+  "per_task_calibrated": {
+    "choice": {
+      "accuracy": 1.0,
+      "answered": 4,
+      "brier": 0.00020000000001920006,
+      "ece": 0.005000000002989946,
+      "mean_confidence": 0.99499999999701,
+      "n": 4
+    }
+  },
+  "per_task_raw": {
+    "choice": {
+      "accuracy": 1.0,
+      "answered": 4,
+      "brier": 0.0002000000000000002,
+      "ece": 0.0050000000000000044,
+      "mean_confidence": 0.995,
+      "n": 4
+    }
+  },
+  "raw": {
+    "accuracy": 1.0,
+    "answered": 4,
+    "brier": 0.0002000000000000002,
+    "ece": 0.0050000000000000044,
+    "mean_confidence": 0.995,
+    "n": 4
+  },
+  "temperature": {
+    "fitted": false,
+    "source": "given/fixed",
+    "value": 1.0
+  },
+  "throughput": {
+    "items_per_s": 0.294,
+    "note": "sequential, one question per item, batch=1"
+  }
+}

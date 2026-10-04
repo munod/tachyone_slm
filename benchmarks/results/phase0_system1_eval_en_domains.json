@@ -1,0 +1,91 @@
+{
+  "calibrated": {
+    "accuracy": 1.0,
+    "answered": 4,
+    "brier": 0.45403629654501043,
+    "ece": 0.5671037003656105,
+    "mean_confidence": 0.43289629963438947,
+    "n": 4
+  },
+  "compliance": {
+    "answered": 4,
+    "failed": 0,
+    "rate": 1.0
+  },
+  "dataset": {
+    "kind": "jsonl",
+    "languages": null,
+    "limit": 0,
+    "path": "/home/thiago/Documentos/Projetos/TachyOne_SLM/benchmarks/results/phase0_slice_eval_en_domains.jsonl",
+    "per_task": 500,
+    "probe": null,
+    "repo": null,
+    "rows": 4,
+    "split": "test",
+    "val_split": null,
+    "warmup_excluded": 0
+  },
+  "engine": "tachyone (encoder)",
+  "engine_config": {
+    "backend": "encoder"
+  },
+  "environment": {
+    "command": "/tmp/opencode/tachyone/benchmarks/compare.py run --engine tachyone --backend encoder --format jsonl --data /home/thiago/Documentos/Projetos/TachyOne_SLM/benchmarks/results/phase0_slice_eval_en_domains.jsonl --per-task 500 --warmup 0 --temperature 1.0 --out /home/thiago/Documentos/Projetos/TachyOne_SLM/benchmarks/results/phase0_system1_eval_en_domains.json",
+    "cwd": "/tmp/opencode/tachyone",
+    "gpu": "NVIDIA GeForce RTX 3060",
+    "platform": "Linux-6.12.108-1-MANJARO-x86_64-with-glibc2.44",
+    "processor": "x86_64",
+    "python": "3.12.13",
+    "timestamp": "2026-10-03T23:43:43+00:00",
+    "torch": "2.14.0+cu130",
+    "vram_total_mb": 11906
+  },
+  "latency_ms": {
+    "mean": 382.53,
+    "n": 4,
+    "p50": 364.038,
+    "p95": 464.902
+  },
+  "memory": {
+    "measured_on": "this process",
+    "peak_rss_mb": 2387.7,
+    "peak_vram_mb": 1775.7
+  },
+  "per_task_calibrated": {
+    "choice": {
+      "accuracy": 1.0,
+      "answered": 4,
+      "brier": 0.45403629654501043,
+      "ece": 0.5671037003656105,
+      "mean_confidence": 0.43289629963438947,
+      "n": 4
+    }
+  },
+  "per_task_raw": {
+    "choice": {
+      "accuracy": 1.0,
+      "answered": 4,
+      "brier": 0.45403629654501043,
+      "ece": 0.5671037003656105,
+      "mean_confidence": 0.4328962996343895,
+      "n": 4
+    }
+  },
+  "raw": {
+    "accuracy": 1.0,
+    "answered": 4,
+    "brier": 0.45403629654501043,
+    "ece": 0.5671037003656105,
+    "mean_confidence": 0.4328962996343895,
+    "n": 4
+  },
+  "temperature": {
+    "fitted": false,
+    "source": "given/fixed",
+    "value": 1.0
+  },
+  "throughput": {
+    "items_per_s": 2.614,
+    "note": "sequential, one question per item, batch=1"
+  }
+}

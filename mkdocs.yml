@@ -1,0 +1,23 @@
+site_name: TachyOne SLM — Specifications & Documentation
+site_description: Spec-driven documentation for the TachyOne SLM (local System-2 of the TachyOne hybrid).
+site_url: # set after the workspace is published
+repo_url: https://github.com/munod/tachyone
+docs_dir: docs
+theme: readthedocs
+
+nav:
+  - Home: index.md
+  - PRD (v1.2.0): tachyone_prd.md
+  - Phase 0 Baseline: phase0-baseline.md
+  - Architecture: architecture.md
+  - Execution Plan: plan.md
+  - Model Card (template): model-card.md
+  - Decisions:
+      - Index: decisions/README.md
+      - "DEC-001: Scoring vs free generation": decisions/decoding-strategy.md
+      - "DEC-002: Training/export stack (ADR-0017 pending)": decisions/training-export-stack.md
+      - "DEC-003: Spec location (.specs/)": decisions/spec-location.md
+      - "DEC-004: Documentation language": decisions/docs-language.md
+
+# Gate: `mkdocs build --strict` must stay green (PRD §6).
+# Keep nav entries in sync with files under docs/ (BACKLOG WS-B-013).

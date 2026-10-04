@@ -1,0 +1,127 @@
+{
+  "confidence": {
+    "max": 1.0,
+    "mean": 0.9775,
+    "min": 0.4477,
+    "percentiles": {
+      "p01": 0.5666,
+      "p05": 0.8106,
+      "p10": 0.9631,
+      "p25": 0.9997,
+      "p50": 1.0
+    }
+  },
+  "dataset": {
+    "path": "data/eval_multi.jsonl",
+    "per_task_cap": "none (full split)",
+    "rows": 1500
+  },
+  "environment": {
+    "command": "/home/thiago/Documentos/Projetos/TachyOne_SLM/benchmarks/phase0_build_slice.py --data data/eval_multi.jsonl --slice-out /home/thiago/Documentos/Projetos/TachyOne_SLM/benchmarks/results/phase0_slice_eval_multi.jsonl --report-out /home/thiago/Documentos/Projetos/TachyOne_SLM/benchmarks/results/phase0_slice_eval_multi.json",
+    "cwd": "/tmp/opencode/tachyone",
+    "gpu": "NVIDIA GeForce RTX 3060",
+    "platform": "Linux-6.12.108-1-MANJARO-x86_64-with-glibc2.44",
+    "processor": "x86_64",
+    "python": "3.12.13",
+    "timestamp": "2026-10-03T12:42:21+00:00",
+    "torch": "2.14.0+cu130",
+    "vram_total_mb": 11906
+  },
+  "feature": "baseline-system2",
+  "phase": 0,
+  "slice": {
+    "by_lang": {
+      "fr": {
+        "accuracy": 0.0,
+        "size": 1
+      },
+      "it": {
+        "accuracy": 0.0,
+        "size": 6
+      },
+      "nl": {
+        "accuracy": 0.0,
+        "size": 6
+      },
+      "pt": {
+        "accuracy": 1.0,
+        "size": 5
+      }
+    },
+    "by_type": {
+      "choice": {
+        "accuracy": 1.0,
+        "size": 5
+      },
+      "noul": {
+        "accuracy": 0.0,
+        "size": 1
+      },
+      "score": {
+        "accuracy": 0.0,
+        "size": 12
+      }
+    },
+    "coverage_rule": "100% of slice rows must receive a valid wire answer from System-2",
+    "definition": "System-1 confidence < tau (tachyone.handoff.assess_response rule)",
+    "kept_size": 1482,
+    "share": 0.012,
+    "size": 18,
+    "slice_out": "/home/thiago/Documentos/Projetos/TachyOne_SLM/benchmarks/results/phase0_slice_eval_multi.jsonl"
+  },
+  "system1": {
+    "accuracy_full": 0.8933,
+    "accuracy_kept": 0.9008,
+    "accuracy_slice": 0.2778,
+    "backend": "encoder",
+    "correct_slice": 5,
+    "model": "tachyone-latest",
+    "wire_failure_ids": [],
+    "wire_failures": 0
+  },
+  "tau": 0.6,
+  "tau_sweep": {
+    "0.30": {
+      "accuracy_slice": null,
+      "share": 0.0,
+      "size": 0,
+      "usable_denominator": false
+    },
+    "0.50": {
+      "accuracy_slice": 0.8333,
+      "share": 0.004,
+      "size": 6,
+      "usable_denominator": false
+    },
+    "0.60": {
+      "accuracy_slice": 0.2778,
+      "share": 0.012,
+      "size": 18,
+      "usable_denominator": false
+    },
+    "0.70": {
+      "accuracy_slice": 0.38,
+      "share": 0.0333,
+      "size": 50,
+      "usable_denominator": true
+    },
+    "0.80": {
+      "accuracy_slice": 0.2836,
+      "share": 0.0447,
+      "size": 67,
+      "usable_denominator": true
+    },
+    "0.90": {
+      "accuracy_slice": 0.2596,
+      "share": 0.0693,
+      "size": 104,
+      "usable_denominator": true
+    },
+    "0.95": {
+      "accuracy_slice": 0.2605,
+      "share": 0.0793,
+      "size": 119,
+      "usable_denominator": true
+    }
+  }
+}

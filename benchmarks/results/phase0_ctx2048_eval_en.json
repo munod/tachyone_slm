@@ -1,0 +1,95 @@
+{
+  "calibrated": {
+    "accuracy": 0.0,
+    "answered": 0,
+    "brier": NaN,
+    "ece": NaN,
+    "mean_confidence": NaN,
+    "n": 1
+  },
+  "compliance": {
+    "answered": 0,
+    "failed": 1,
+    "rate": 0.0
+  },
+  "dataset": {
+    "kind": "jsonl",
+    "languages": null,
+    "limit": 0,
+    "path": "/home/thiago/Documentos/Projetos/TachyOne_SLM/benchmarks/results/phase0_slice_eval_en.jsonl",
+    "per_task": 500,
+    "probe": null,
+    "repo": null,
+    "rows": 1,
+    "split": "test",
+    "val_split": null,
+    "warmup_excluded": 0
+  },
+  "engine": "llm (qwen05b-ctx2048)",
+  "engine_config": {
+    "backend": "llm",
+    "base_url": "http://127.0.0.1:8083/v1",
+    "model": "qwen05b-ctx2048",
+    "retries": 1,
+    "timeout_s": 300.0
+  },
+  "environment": {
+    "command": "/tmp/opencode/tachyone/benchmarks/compare.py run --engine llm --llm-base-url http://127.0.0.1:8083/v1 --llm-model qwen05b-ctx2048 --llm-timeout 300 --format jsonl --data /home/thiago/Documentos/Projetos/TachyOne_SLM/benchmarks/results/phase0_slice_eval_en.jsonl --per-task 500 --warmup 0 --temperature 1.0 --out /home/thiago/Documentos/Projetos/TachyOne_SLM/benchmarks/results/phase0_ctx2048_eval_en.json",
+    "cwd": "/tmp/opencode/tachyone",
+    "gpu": "NVIDIA GeForce RTX 3060",
+    "platform": "Linux-6.12.108-1-MANJARO-x86_64-with-glibc2.44",
+    "processor": "x86_64",
+    "python": "3.12.13",
+    "timestamp": "2026-10-03T23:48:38+00:00",
+    "torch": "2.14.0+cu130",
+    "vram_total_mb": 11906
+  },
+  "latency_ms": {
+    "mean": 5394.123,
+    "n": 1,
+    "p50": 5394.123,
+    "p95": 5394.123
+  },
+  "memory": {
+    "measured_on": "llama-server pid 1013895",
+    "peak_rss_mb": 1322.5,
+    "peak_vram_mb": 568.0
+  },
+  "per_task_calibrated": {
+    "choice": {
+      "accuracy": 0.0,
+      "answered": 0,
+      "brier": NaN,
+      "ece": NaN,
+      "mean_confidence": NaN,
+      "n": 1
+    }
+  },
+  "per_task_raw": {
+    "choice": {
+      "accuracy": 0.0,
+      "answered": 0,
+      "brier": NaN,
+      "ece": NaN,
+      "mean_confidence": NaN,
+      "n": 1
+    }
+  },
+  "raw": {
+    "accuracy": 0.0,
+    "answered": 0,
+    "brier": NaN,
+    "ece": NaN,
+    "mean_confidence": NaN,
+    "n": 1
+  },
+  "temperature": {
+    "fitted": false,
+    "source": "given/fixed",
+    "value": 1.0
+  },
+  "throughput": {
+    "items_per_s": 0.185,
+    "note": "sequential, one question per item, batch=1"
+  }
+}

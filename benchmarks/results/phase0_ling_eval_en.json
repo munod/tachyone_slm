@@ -1,0 +1,95 @@
+{
+  "calibrated": {
+    "accuracy": 1.0,
+    "answered": 1,
+    "brier": 1.2000267944828853e-23,
+    "ece": 3.000044657142098e-12,
+    "mean_confidence": 0.999999999997,
+    "n": 1
+  },
+  "compliance": {
+    "answered": 1,
+    "failed": 0,
+    "rate": 1.0
+  },
+  "dataset": {
+    "kind": "jsonl",
+    "languages": null,
+    "limit": 0,
+    "path": "/home/thiago/Documentos/Projetos/TachyOne_SLM/benchmarks/results/phase0_slice_eval_en.jsonl",
+    "per_task": 500,
+    "probe": null,
+    "repo": null,
+    "rows": 1,
+    "split": "test",
+    "val_split": null,
+    "warmup_excluded": 0
+  },
+  "engine": "llm (ling-tiny)",
+  "engine_config": {
+    "backend": "llm",
+    "base_url": "http://127.0.0.1:8081/v1",
+    "model": "ling-tiny",
+    "retries": 1,
+    "timeout_s": 300.0
+  },
+  "environment": {
+    "command": "/tmp/opencode/tachyone/benchmarks/compare.py run --engine llm --llm-base-url http://127.0.0.1:8081/v1 --llm-model ling-tiny --llm-timeout 300 --format jsonl --data /home/thiago/Documentos/Projetos/TachyOne_SLM/benchmarks/results/phase0_slice_eval_en.jsonl --per-task 500 --warmup 0 --temperature 1.0 --out /home/thiago/Documentos/Projetos/TachyOne_SLM/benchmarks/results/phase0_ling_eval_en.json",
+    "cwd": "/tmp/opencode/tachyone",
+    "gpu": "NVIDIA GeForce RTX 3060",
+    "platform": "Linux-6.12.108-1-MANJARO-x86_64-with-glibc2.44",
+    "processor": "x86_64",
+    "python": "3.12.13",
+    "timestamp": "2026-10-03T22:18:23+00:00",
+    "torch": "2.14.0+cu130",
+    "vram_total_mb": 11906
+  },
+  "latency_ms": {
+    "mean": 1079.342,
+    "n": 1,
+    "p50": 1079.342,
+    "p95": 1079.342
+  },
+  "memory": {
+    "measured_on": "llama-server pid 989355",
+    "peak_rss_mb": 5074.1,
+    "peak_vram_mb": 4906.0
+  },
+  "per_task_calibrated": {
+    "choice": {
+      "accuracy": 1.0,
+      "answered": 1,
+      "brier": 1.2000267944828853e-23,
+      "ece": 3.000044657142098e-12,
+      "mean_confidence": 0.999999999997,
+      "n": 1
+    }
+  },
+  "per_task_raw": {
+    "choice": {
+      "accuracy": 1.0,
+      "answered": 1,
+      "brier": 0.0,
+      "ece": 0.0,
+      "mean_confidence": 1.0,
+      "n": 1
+    }
+  },
+  "raw": {
+    "accuracy": 1.0,
+    "answered": 1,
+    "brier": 0.0,
+    "ece": 0.0,
+    "mean_confidence": 1.0,
+    "n": 1
+  },
+  "temperature": {
+    "fitted": false,
+    "source": "given/fixed",
+    "value": 1.0
+  },
+  "throughput": {
+    "items_per_s": 0.926,
+    "note": "sequential, one question per item, batch=1"
+  }
+}
