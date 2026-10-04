@@ -26,6 +26,7 @@ TachyOne SLM is a **Qwen2.5-0.5B-Instruct** model fine-tuned with **SFT via LoRA
 - **Specs:** [`.specs/README.md`](.specs/README.md) · [project](.specs/project/PROJECT.md) · [roadmap](.specs/project/ROADMAP.md) · [state](.specs/project/STATE.md) · [backlog](.specs/project/BACKLOG.md)
 - **Feature specs (Phases 0–5):** [baseline-system2](.specs/features/baseline-system2/spec.md) · [slm-mixture-data](.specs/features/slm-mixture-data/spec.md) · [slm-lora-sft](.specs/features/slm-lora-sft/spec.md) · [slm-export-quant](.specs/features/slm-export-quant/spec.md) · [system-two-integration](.specs/features/system-two-integration/spec.md) · [slm-benchmark-docs](.specs/features/slm-benchmark-docs/spec.md)
 - **Docs:** [architecture](docs/architecture.md) · [execution plan](docs/plan.md) · [Phase 0 baseline](docs/phase0-baseline.md) · [dataset card (SLM Mixture v1)](docs/slm-mixture-v1.md) · [model card (template)](docs/model-card.md) · [decisions](docs/decisions/README.md)
+- **Dataset (Hugging Face):** [`munod/tachyone_slm_mixture_v1`](https://huggingface.co/datasets/munod/tachyone_slm_mixture_v1) · **Model (future weights):** [`munod/tachyone_slm`](https://huggingface.co/munod/tachyone_slm)
 - **Contributing:** [`CONTRIBUTING.md`](CONTRIBUTING.md) · **Changelog:** [`CHANGELOG.md`](CHANGELOG.md)
 
 ## Phases at a glance (PRD §6)

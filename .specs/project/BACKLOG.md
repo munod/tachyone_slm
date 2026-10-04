@@ -28,7 +28,7 @@
 | WS-B-016 | Wire payload carries **no `max_tokens`** → free-generation clients run away (6,024 tokens/row measured). Cap the engine (`-n 1024`) in every future run, or fix it once the scoring mode lands (Phase 4) | P1 | 4–5 | §3.4, §4.5 | Open — WS-L-002 |
 | WS-B-017 | **English abstained slice has no usable denominator** at τ=0.6 (n=1 / n=4). Decide before Phase 5: higher τ (sweep in `docs/phase0-baseline.md` §1), harder English eval set, or accept a multilingual anchor | P2 | 5 | §2, §8 | Open — WS-AD-008 |
 | WS-B-018 | Five-domain fitted-bank checkpoints (`multi_b5b_fit_bank`, `en_jev_bank`) are **not distributed** (no Hub model, no release asset) while `benchmarks/report.md` quotes their 0.997 — ask upstream to publish them or stop quoting the number | P2 | 5 | §2 baseline col. | Open — WS-L-003 |
-| WS-B-019 | **Publish `Tachyone-SLM-Mixture-v1` to Hugging Face** (`munod/tachyone_slm`) — dataset card + files; only on explicit request, nothing uploads automatically | P2 | 1 → 5 | §3.3, §7.6 | Open — awaiting maintainer |
+| WS-B-019 | **Publish `Tachyone-SLM-Mixture-v1` to Hugging Face** — dataset card + files; only on explicit request, nothing uploads automatically | P2 | 1 → 5 | §3.3, §7.6 | ✅ Done (2026-10-04) — [`datasets/munod/tachyone_slm_mixture_v1`](https://huggingface.co/datasets/munod/tachyone_slm_mixture_v1), `load_dataset` verified |
 | WS-B-020 | Public-probe contamination audit (`typed-decisions`/`MASSIVE`/`XNLI`) — recorded as `skipped — absent locally`; re-run when probe data exists | P3 | 5 | §3.3, §8 | Open — structural argument recorded instead |
 | WS-B-021 | `noul` is the thinnest primitive after dedup (**13,607** pairs vs 19,131 `choice`) and `en`×`support` the smallest cell (451) — Phase 2 must gate on these worst cells (§3.2) | P2 | 2 | §3.2, §7.2 | Open — surfaced by DAT-07 |
 
@@ -53,6 +53,7 @@
 | ID | Item | Date |
 | --- | --- | --- |
 | DAT-01…08 | **Phase 1 delivered** — `Tachyone-SLM-Mixture-v1`: 85,500 raw → **50,180 clean pairs**, audit **pass** (0/0 over 18,000 frozen records), split 45,175/5,005, 16 tests green, dataset card `docs/slm-mixture-v1.md` | 2026-10-04 |
+| WS-B-019 | **Dataset published to Hugging Face** — [`datasets/munod/tachyone_slm_mixture_v1`](https://huggingface.co/datasets/munod/tachyone_slm_mixture_v1) (Apache-2.0, 62.6 MB, card + provenance), `load_dataset` verified end-to-end on both configs | 2026-10-04 |
 | WS-B-014 | `git init` + first conventional commit — executed on request: `git init -b main`, remote `munod/tachyone_slm`, commit `2122616` | 2026-10-03 |
 | WS-B-001 | **Phase 0 baselines measured** (System-1 + `ornith-9b` + `ling-tiny` + SLM base × 4 slices, τ sweep, yardstick) and **PRD §2 targets fixed** → PRD v1.2.0; evidence `docs/phase0-baseline.md` + 24 artifacts | 2026-10-03 |
 | WS-B-003 | **Context A/B executed**: 2,048 vs 4,096 identical (0 rows exceed 2,048 tokens) → **2,048 chosen** (WS-AD-007, PRD §3.1) | 2026-10-03 |

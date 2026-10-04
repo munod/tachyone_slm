@@ -155,7 +155,7 @@
 - [x] Build `Tachyone-SLM-Mixture-v1` (config, dedup, split, render, audit, provenance) — **done 2026-10-04** (DAT-01…08)
 - [ ] **Appro PRD v1.2.0** (maintainer) — closes Phase 0
 - [ ] Publish ADR-0017 (training/export stack) + schema annex (PRD §5.4) in `munod/tachyone` — **gates Phase 2**
-- [ ] Publish `Tachyone-SLM-Mixture-v1` to HF (`munod/tachyone_slm`) — **only on request** (WS-B-019)
+- [x] Publish `Tachyone-SLM-Mixture-v1` to HF — **done 2026-10-04** (`datasets/munod/tachyone_slm_mixture_v1`; model repo `munod/tachyone_slm` reserved for weights)
 - [ ] Fill `docs/model-card.md` placeholders in Phase 5
 - [ ] Add the SLM engine row to `benchmarks/compare.py` (Phase 5)
 - [x] Extend `mkdocs.yml` nav as new pages land (`phase0-baseline` + `slm-mixture-v1` added — WS-B-013 covered)

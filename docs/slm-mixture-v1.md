@@ -120,6 +120,5 @@ PYTHONPATH="$TACHYONE_REPO" uv run --project "$TACHYONE_REPO" pytest tests/ -q
   templating than to real traffic; the public probes remain the external check (Phase 5).
 * **`noul` is the thinnest primitive** after dedup (13,607) — worst-cell gating (§3.2) should
   watch it in Phase 2.
-* **Not yet published.** The Hugging Face repo `munod/tachyone_slm` exists; uploading this
-  dataset is a deliberate, separate step (nothing was pushed automatically).
+* **Published.** Dataset live at **[`huggingface.co/datasets/munod/tachyone_slm_mixture_v1`](https://huggingface.co/datasets/munod/tachyone_slm_mixture_v1)** (Apache-2.0, public, 62.6 MB: `records/`, `pairs/`, `provenance/`, card + LICENSE) — uploaded **2026-10-04**, verified end-to-end with `load_dataset` (45,175 / 5,005 on both configs). The **model** repo [`munod/tachyone_slm`](https://huggingface.co/munod/tachyone_slm) stays reserved for the SLM weights (Phase 3/5). The pre-dedup `*.raw.jsonl` is deliberately **not** published.
 * Consumed later by `docs/model-card.md` (Phase 5) — update **as a set** (AD-009).

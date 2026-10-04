@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **Language note:** entries are written in **English** (PRD §6 gate: docs/PRs in English). The product source of truth, `docs/tachyone_prd.md` (**PRD v1.2.0**), is versioned separately in its own header and remains in **Portuguese** — it is referenced here, never overwritten (decision DEC-004).
 
+## [0.3.1] - 2026-10-04
+
+### Changed
+
+- **Dataset published to Hugging Face:** [`datasets/munod/tachyone_slm_mixture_v1`](https://huggingface.co/datasets/munod/tachyone_slm_mixture_v1) (public, Apache-2.0, 62.6 MB) — `records/` + `pairs/` (train/validation), `provenance/` (manifest, split/render report, audit, config), HF dataset card and `LICENSE`. Uploaded **only on explicit request**; the model repo [`munod/tachyone_slm`](https://huggingface.co/munod/tachyone_slm) remains reserved for the SLM weights (Phase 3/5).
+- **Verified end-to-end:** `load_dataset("munod/tachyone_slm_mixture_v1", "records"|"pairs")` → 45,175 / 5,005 rows on both configs, samples spot-checked (wire-request prompt, gold label).
+- `docs/slm-mixture-v1.md` §8 — "not yet published" replaced by the published URL + verification; `BACKLOG` `WS-B-019` closed; `STATE` todo checked.
+
+### Fixed
+
+- HF dataset-card schema: `license_name` dropped (must be lowercase) and `dataset_info` uses `num_examples` (not `num_rows`) — the first upload attempt was rejected by `/api/validate-yaml` and the first `load_dataset` failed on the wrong key; both corrected and re-published.
+
 ## [0.3.0] - 2026-10-04
 
 **Phase 1 (`slm-mixture-data`) delivered** — `Tachyone-SLM-Mixture-v1`, the SFT training data of the epic (DAT-01…08, 8/8).
