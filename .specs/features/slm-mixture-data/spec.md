@@ -1,7 +1,8 @@
 # Phase 1 — SFT Mixture Data Specification (`Tachyone-SLM-Mixture-v1`)
 
-**Feature ID:** `slm-mixture-data` · **Prefix:** `DAT` · **Phase:** 1 (Days 2–3) · **Status:** Planned
-**PRD source:** `docs/tachyone_prd.md` v1.1.0 — §3.3 (dataset), §3.4 (rendering targets), §7.2 (golden-hash / no regression), §8 (contamination risk)
+**Feature ID:** `slm-mixture-data` · **Prefix:** `DAT` · **Phase:** 1 (Days 2–3) · **Status:** ✅ Complete (2026-10-04)
+**PRD source:** `docs/tachyone_prd.md` **v1.2.0** — §3.3 (dataset), §3.4 (rendering targets), §7.2 (golden-hash / no regression), §8 (contamination risk)
+**Evidence:** `docs/slm-mixture-v1.md` (dataset card) · `artifacts/slm-mixture-v1/{manifest,split_render,audit}.json` · 16 tests green in `tests/test_sft_mixture.py`
 
 ---
 
@@ -9,13 +10,15 @@
 
 The SLM needs ~50k SFT pairs whose labels are *derived from the text* and whose prompts are the real wire requests. A parallel ad-hoc dataset would repeat the label-indexing bugs that cost 3 retrains (B-11/B-12) and would risk contaminating the frozen eval sets (L-005). The training signal must come from the **existing** `training/generate_data.py` pipeline — reproducible, byte-idempotent, and audited.
 
+**Delivered:** 85,500 raw records → **50,180 clean** (41.31% collided with frozen eval sets and were removed per AC2), 45,175/5,005 train/val, 50,180 validated SFT pairs, audit **pass** with overlap **0/0**.
+
 ## Goals
 
-- [ ] New pipeline config `training/configs/data_sft_slm.json` producing ≈ **50,000 records** across 7 languages × 5 domains with a pinned seed.
-- [ ] Labels derived from text per ADR-0014/ADR-0015 (`noul` phrase bank, `score` tone, `choice` state-named option).
-- [ ] Golden-hash idempotence test + deterministic train/val split in `pytest`.
-- [ ] Contamination audit proving eval sets never appear in prompts nor in the temperature-fit validation split.
-- [ ] SFT rendering: prompt = rendered wire request; target = PRD §3.4 strategy; validation grammar applied at pair generation.
+- [x] New pipeline config `training/configs/data_sft_slm.json` producing ≈ **50,000 records** across 7 languages × 5 domains with a pinned seed. *(Config `per_type=5700`/seed `20261003` → 85,500 raw → **50,180 clean** after the dedup AC2 mandates; sizing rationale in the dataset card §1.)*
+- [x] Labels derived from text per ADR-0014/ADR-0015 (`noul` phrase bank, `score` tone, `choice` state-named option). *(Upstream pipeline imported unmodified; its own 46 golden tests green.)*
+- [x] Golden-hash idempotence test + deterministic train/val split in `pytest`. *(16 tests, 3 s: byte-idempotence, config↔manifest, split stability.)*
+- [x] Contamination audit proving eval sets never appear in prompts nor in the temperature-fit validation split. *(**pass**, 0 state / 0 prompt hits on both sides; 35,320 raw records removed.)*
+- [x] SFT rendering: prompt = rendered wire request; target = PRD §3.4 strategy; validation grammar applied at pair generation. *(50,180 pairs, **0 rejected**; every prompt re-parsed by `tachyone.wire.parse_request`.)*
 
 ## Out of Scope
 
@@ -114,28 +117,28 @@ The SLM needs ~50k SFT pairs whose labels are *derived from the text* and whose 
 
 | Requirement ID | Requirement | PRD | KPI / Criterion | Status |
 | --- | --- | --- | --- | --- |
-| DAT-01 | Config `data_sft_slm.json`: 7 languages, 5 domains, ≈50k, pinned seed | §3.3 | enables G4 accuracy | Pending |
-| DAT-02 | Labels from text (phrase bank / tone / state-named option) per ADR-0014/0015 | §3.3 | no-regression (§7.2) | Pending |
-| DAT-03 | Byte-idempotent output (golden-hash) + deterministic split + per-record RNG | §3.3 | §7.2 golden-hash intact | Pending |
-| DAT-04 | Contamination audit vs eval sets + probes; fail on overlap | §3.3, §8 | validity of §7.2/§7.4 | Pending |
-| DAT-05 | SFT rendering: wire-request prompt → §3.4 target | §3.3, §3.4 | enables §7.1 (`JSON ok`) | Pending |
-| DAT-06 | §5.4 grammar/filter applied at pair generation | §3.3, §5.4 | §7.1 | Pending |
-| DAT-07 | Per-cell (language × domain) counts reported | §3.2 | worst-cell gating (§7.2) | Pending |
-| DAT-08 | Provenance record for model card | §3.3 | §7.6 publication set | Pending |
+| DAT-01 | Config `data_sft_slm.json`: 7 languages, 5 domains, ≈50k, pinned seed | §3.3 | enables G4 accuracy | ✅ Done — 7×5, seed 20261003, 85,500 raw → **50,180 clean** |
+| DAT-02 | Labels from text (phrase bank / tone / state-named option) per ADR-0014/0015 | §3.3 | no-regression (§7.2) | ✅ Done — upstream generator imported unmodified; 46/46 upstream data tests green; renderer only validates (`target ∈ candidates`) |
+| DAT-03 | Byte-idempotent output (golden-hash) + deterministic split + per-record RNG | §3.3 | §7.2 golden-hash intact | ✅ Done — raw sha `563d0c63…`; split = `sha256(line)%10`, 45,175/5,005, stable (tests) |
+| DAT-04 | Contamination audit vs eval sets + probes; fail on overlap | §3.3, §8 | validity of §7.2/§7.4 | ✅ Done — **pass**, overlap 0/0 (mixture + val) over 18,000 frozen records; probes `skipped — absent locally` with structural reason; fail path tested |
+| DAT-05 | SFT rendering: wire-request prompt → §3.4 target | §3.3, §3.4 | enables §7.1 (`JSON ok`) | ✅ Done — 50,180 pairs (choice key / score index / noul true-false), 0 dropped |
+| DAT-06 | §5.4 grammar/filter applied at pair generation | §3.3, §5.4 | §7.1 | ✅ Done — every prompt re-parsed by `tachyone.wire.parse_request`; rejection paths tested |
+| DAT-07 | Per-cell (language × domain) counts reported | §3.2 | worst-cell gating (§7.2) | ✅ Done — 35/35 cells, min 451 (`en`×`support`) / max 1,837 (`pt`×`documents`) |
+| DAT-08 | Provenance record for model card | §3.3 | §7.6 publication set | ✅ Done — `docs/slm-mixture-v1.md` (identity, hashes, audit, caveats) |
 
-**Coverage:** 8 requirements, 0 unmapped.
+**Coverage:** 8 requirements, 0 unmapped. **8/8 delivered.**
 
 ---
 
 ## Verification (Phase 1 exit)
 
-- **Gates:** `ruff check` · `ruff format --check` · `pyright` · `pytest` (includes golden-hash + renderer + audit tests) · `mkdocs build --strict` (PRD §6).
-- **Artifacts:** generated mixture, golden-hash test green, contamination audit record, per-cell counts, provenance note.
-- **Regression check:** dataset golden-hashes of **existing** eval assets remain intact (§7.2).
+- **Gates:** `ruff check` · `ruff format --check` · `pyright` · `pytest` (16 tests: golden-hash + renderer + audit pass/fail) · `mkdocs build --strict` (PRD §6) — all green.
+- **Artifacts:** ✅ clean mixture + splits + pairs (`data/`, gitignored, 130 MB), ✅ `manifest.json` / `split_render.json` / `audit.json` (versioned), ✅ provenance note `docs/slm-mixture-v1.md`.
+- **Regression check:** ✅ upstream eval golden-hashes intact (`tests/test_training_generate.py`, 46/46) — the frozen sets were never touched, only *read* for the audit.
 
 ## Success Criteria
 
-- [ ] ≈50k records generated deterministically from one config with pinned seed.
-- [ ] Golden-hash test and contamination audit green in CI.
-- [ ] Every SFT pair validated against the §5.4 grammar at generation time.
-- [ ] No eval-set leakage (audit record attached).
+- [x] ≈50k records generated deterministically from one config with pinned seed. *(50,180 clean, seed 20261003, one config.)*
+- [x] Golden-hash test and contamination audit green. *(raw sha committed in the manifest; audit `pass` with 0/0 overlap; fail path covered by a test.)*
+- [x] Every SFT pair validated against the §5.4 grammar at generation time. *(50,180 validated, 0 rejected.)*
+- [x] No eval-set leakage (audit record attached). *(`artifacts/slm-mixture-v1/audit.json`.)*

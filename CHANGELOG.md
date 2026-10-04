@@ -7,6 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **Language note:** entries are written in **English** (PRD §6 gate: docs/PRs in English). The product source of truth, `docs/tachyone_prd.md` (**PRD v1.2.0**), is versioned separately in its own header and remains in **Portuguese** — it is referenced here, never overwritten (decision DEC-004).
 
+## [0.3.0] - 2026-10-04
+
+**Phase 1 (`slm-mixture-data`) delivered** — `Tachyone-SLM-Mixture-v1`, the SFT training data of the epic (DAT-01…08, 8/8).
+
+### Added
+
+- **`slm_pipeline/`** — Phase 1 tooling under a package name that never shadows the upstream `training` package (WS-L-006):
+  - `generate_mixture.py` — config-driven generation (the JSON *is* the run: no duplicated CLI flags) + manifest with sha256, per-primitive/per-language/per-cell counts.
+  - `prepare_sft.py` — contamination **dedup → deterministic split → render → audit → reports**; fails the build on any overlap.
+  - `render_sft.py` — wire-request prompt (§5.1) + gold label target (§3.4); every prompt re-parsed by `tachyone.wire.parse_request`, targets validated against their own candidate set.
+  - `audit_contamination.py` — content-based fingerprints (state + prompt), frozen sets vs mixture **and** vs the temperature-fit val side; empty states counted, never matched.
+- **`training/configs/data_sft_slm.json`** — 7 languages × 5 domains, seed `20261003`, `per_type` 5700 (DAT-01 path preserved as plain config data).
+- **`tests/test_sft_mixture.py`** — 16 tests (3 s): byte-idempotence, config↔manifest golden hash, split stability, rendering per primitive, rejection paths, audit **pass and fail**.
+- **`docs/slm-mixture-v1.md`** — dataset card / provenance (DAT-08): identity, contamination handling, split, rendering, coverage, sha256 of every artifact, caveats.
+- **`artifacts/slm-mixture-v1/`** — `manifest.json`, `split_render.json`, `audit.json` (versioned evidence).
+- `conftest.py` — test path setup.
+
+### Changed
+
+- **Dataset built:** 85,500 raw → **50,180 clean** records (41.31% collided with frozen eval sets and were removed per DAT-04 AC2) → split **45,175 / 5,005** → **50,180 validated SFT pairs, 0 rejected**; audit **pass** with overlap **0/0** over 18,000 frozen records; 35/35 language×domain cells (min 451, max 1,837).
+- `.specs/features/slm-mixture-data/spec.md` — status **Complete**, 8/8 requirements, success criteria checked.
+- `.specs/project/ROADMAP.md` — Milestone 1 **COMPLETE**.
+- `.specs/project/STATE.md` — `WS-AD-009` (dedup + raw/clean naming), lessons `WS-L-005/006`, quick task 008, todos.
+- `.specs/project/BACKLOG.md` — DAT-01…08 to Done; new `WS-B-019` (publish dataset to HF, on request), `WS-B-020` (probe audit), `WS-B-021` (worst cells for Phase 2).
+- `.gitignore` — `data/` (≈130 MB of regenerable datasets) excluded; configs/artifacts/docs stay versioned.
+- `mkdocs.yml` / `docs/index.md` — dataset card added to the nav.
+
 ## [0.2.0] - 2026-10-03
 
 **Phase 0 (`baseline-system2`) executed and delivered** — the measurement run that unblocks PRD approval.

@@ -1,7 +1,7 @@
 # Execution Plan — Phases 0–5
 
 > Derived from **PRD v1.2.0** (`tachyone_prd.md`) §6 (plan), §7 (acceptance), §8 (risks), §9 (traceability).
-> Status of every phase: **Phase 0 ✅ COMPLETE (2026-10-03)**; Phases 1–5 **PLANNED** — see `.specs/project/ROADMAP.md` for live status.
+> Status of every phase: **Phase 0 ✅ (2026-10-03)** and **Phase 1 ✅ (2026-10-04)** complete; Phases 2–5 **PLANNED** (Phase 2 gated by ADR-0017) — see `.specs/project/ROADMAP.md` for live status.
 
 ---
 
@@ -15,7 +15,7 @@
 | Phase | Days | Objective | Key outputs | Spec |
 | --- | --- | --- | --- | --- |
 | **0 — Baseline System-2** ✅ | 1 | Measure System-1 + LLM candidates on the abstained slice; **fix numeric accuracy targets in PRD §2**; A/B context 2,048 vs 4,096 | ✅ `docs/phase0-baseline.md` + 24 artifacts; PRD §2 fixed (`≥0.723`/`≥0.474`, anchor n=264); context decided **2,048** | `.specs/features/baseline-system2/spec.md` |
-| **1 — SFT Mixture** | 2–3 | Generate `Tachyone-SLM-Mixture-v1` from the existing pipeline | Config `data_sft_slm.json` (≈50k, 7 lang, 5 dom, pinned seed), golden-hash test, contamination audit, SFT renderer | `.specs/features/slm-mixture-data/spec.md` |
+| **1 — SFT Mixture** ✅ | 2–3 | Generate `Tachyone-SLM-Mixture-v1` from the existing pipeline | ✅ config + 85,500 raw → **50,180 clean** (dedup 41.31%), split 45,175/5,005, 50,180 pairs, audit **pass 0/0**, 16 tests, `docs/slm-mixture-v1.md` | `.specs/features/slm-mixture-data/spec.md` |
 | **2 — SFT/LoRA Training** | 4–5 | Fine-tune the 0.5B base with the frozen §3.2 recipe | **ADR-0017 first**, adapter/checkpoint, run manifest, worst-cell eval, slice-vs-target readout (~4–12 h GPU) | `.specs/features/slm-lora-sft/spec.md` |
 | **3 — Export & Quantization** | 6 | Merge + deployable artifacts within the VRAM budget | Merged weights, bf16/INT4@3060/FP8@L4 variants, VRAM table, engine flags manifest | `.specs/features/slm-export-quant/spec.md` |
 | **4 — Integration** | 7–8 | Official `system_two()`, scoring decoding, calibration, τ/retry/fallback | SDK/CLI surfaces, cookbook migrated, calibration fit, coverage/`JSON ok` evidence; **contract suite untouched** | `.specs/features/system-two-integration/spec.md` (+ `design.md`) |
@@ -71,9 +71,11 @@
 
 ---
 
-## 5. Current status — Phase 0 **COMPLETE** (2026-10-03)
+## 5. Current status — Phases 0 and 1 **COMPLETE**
 
-**Delivered:** 24 artifacts + `docs/phase0-baseline.md`; PRD **v1.1.0 → v1.2.0**; spec `baseline-system2` 7/7 requirements; `STATE.md` `WS-AD-007/008` + `WS-L-001…004`; `BACKLOG.md` `WS-B-001/003` done (+ `WS-B-015…018` opened).
+**Phase 0 (2026-10-03):** 24 artifacts + `docs/phase0-baseline.md`; PRD **v1.1.0 → v1.2.0**; spec `baseline-system2` 7/7; `STATE.md` `WS-AD-007/008` + `WS-L-001…004`.
+
+**Phase 1 (2026-10-04):** `Tachyone-SLM-Mixture-v1` — 85,500 raw → **50,180 clean** records (41.31% frozen-set collisions removed per DAT-04 AC2), split **45,175/5,005**, **50,180 validated SFT pairs** (0 rejected), audit **pass** (overlap 0/0 over 18,000 frozen records), 35/35 cells, 16 tests green; dataset card `docs/slm-mixture-v1.md`.
 
 **Headline numbers** (RTX 3060, `benchmarks/compare.py` protocol, τ = 0.6):
 
@@ -91,6 +93,7 @@
 **Pending (next):**
 
 1. Maintainer approval of PRD v1.2.0 (**WS-B-015** — closes Phase 0).
-2. Phase 1: `data_sft_slm.json` ≈50k mixture + golden-hash + contamination audit (spec `slm-mixture-data`).
-3. **ADR-0017 before any training code** (**WS-B-002**, gates Phase 2).
-4. Decide the English-slice denominator question (WS-B-017) before Phase 5 acceptance.
+2. **ADR-0017 before any training code** (**WS-B-002**, gates Phase 2 — the only blocker left between here and GPU time).
+3. Publish `Tachyone-SLM-Mixture-v1` to HF `munod/tachyone_slm` (**WS-B-019**, only on request — nothing uploads automatically).
+4. Phase 2 must gate on the worst cells: `noul` (13,607 pairs) and `en`×`support` (451 records) — **WS-B-021**.
+5. Decide the English-slice denominator question (WS-B-017) before Phase 5 acceptance.

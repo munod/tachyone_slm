@@ -1,0 +1,145 @@
+{
+  "by_language": {
+    "de": 7629,
+    "en": 2393,
+    "es": 7631,
+    "fr": 8022,
+    "it": 7902,
+    "nl": 7716,
+    "pt": 8887
+  },
+  "by_primitive": {
+    "choice": 19131,
+    "noul": 13607,
+    "score": 17442
+  },
+  "dataset": "Tachyone-SLM-Mixture-v1",
+  "dedup": {
+    "clean_records": 50180,
+    "drop_rate": 0.4131,
+    "dropped_by_cell": {
+      "agent_tools/de": 896,
+      "agent_tools/en": 1992,
+      "agent_tools/es": 892,
+      "agent_tools/fr": 850,
+      "agent_tools/it": 800,
+      "agent_tools/nl": 851,
+      "agent_tools/pt": 635,
+      "documents/de": 848,
+      "documents/en": 1968,
+      "documents/es": 791,
+      "documents/fr": 731,
+      "documents/it": 758,
+      "documents/nl": 852,
+      "documents/pt": 608,
+      "ecommerce/de": 843,
+      "ecommerce/en": 1917,
+      "ecommerce/es": 876,
+      "ecommerce/fr": 869,
+      "ecommerce/it": 876,
+      "ecommerce/nl": 848,
+      "ecommerce/pt": 643,
+      "support/de": 1014,
+      "support/en": 1994,
+      "support/es": 954,
+      "support/fr": 848,
+      "support/it": 937,
+      "support/nl": 941,
+      "support/pt": 662,
+      "voice/de": 980,
+      "voice/en": 1961,
+      "voice/es": 1066,
+      "voice/fr": 890,
+      "voice/it": 937,
+      "voice/nl": 1002,
+      "voice/pt": 790
+    },
+    "dropped_prompt_match": 0,
+    "dropped_state_match": 35320,
+    "empty_states_kept": 0,
+    "raw_records": 85500
+  },
+  "dropped_pairs": {},
+  "language_domain_cells": 35,
+  "outputs": {
+    "clean": {
+      "bytes": 28864936,
+      "path": "data/tachyone_slm_mixture_v1.jsonl",
+      "sha256": "9cf2e1463348d3333cce5484106e2bebff37303b3656ae67fde4e43d51369491"
+    },
+    "pairs": {
+      "bytes": 34653832,
+      "path": "data/tachyone_slm_mixture_v1.pairs.jsonl",
+      "sha256": "7924a0d54939657be7b778610f7ed33955bc750099cdcb9e62df632294480d82"
+    },
+    "train": {
+      "bytes": 26034131,
+      "path": "data/tachyone_slm_mixture_v1.train.jsonl",
+      "sha256": "ac473873ee731b7cb55d3e0a7cf92b0a91b9372551a8c5263227b6c901ea8f78"
+    },
+    "val": {
+      "bytes": 2830805,
+      "path": "data/tachyone_slm_mixture_v1.val.jsonl",
+      "sha256": "c8d6d3c61d17993edf84eabadbf959b294c7675b979df2bf25c17700fa6a6fa5"
+    }
+  },
+  "pairs": 50180,
+  "per_cell_language_x_domain": {
+    "de": {
+      "agent_tools": 1546,
+      "documents": 1594,
+      "ecommerce": 1599,
+      "support": 1428,
+      "voice": 1462
+    },
+    "en": {
+      "agent_tools": 453,
+      "documents": 477,
+      "ecommerce": 528,
+      "support": 451,
+      "voice": 484
+    },
+    "es": {
+      "agent_tools": 1550,
+      "documents": 1651,
+      "ecommerce": 1566,
+      "support": 1488,
+      "voice": 1376
+    },
+    "fr": {
+      "agent_tools": 1592,
+      "documents": 1711,
+      "ecommerce": 1573,
+      "support": 1594,
+      "voice": 1552
+    },
+    "it": {
+      "agent_tools": 1642,
+      "documents": 1684,
+      "ecommerce": 1566,
+      "support": 1505,
+      "voice": 1505
+    },
+    "nl": {
+      "agent_tools": 1591,
+      "documents": 1590,
+      "ecommerce": 1594,
+      "support": 1501,
+      "voice": 1440
+    },
+    "pt": {
+      "agent_tools": 1810,
+      "documents": 1837,
+      "ecommerce": 1802,
+      "support": 1783,
+      "voice": 1655
+    }
+  },
+  "records": 50180,
+  "rule": "val if int(sha256(raw_line)[:8],16) % 10 == 0",
+  "split": {
+    "train": 45175,
+    "val": 5005,
+    "val_share": 0.0997
+  }
+}

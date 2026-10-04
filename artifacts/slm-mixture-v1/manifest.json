@@ -1,0 +1,92 @@
+{
+  "by_language": {
+    "de": 12210,
+    "en": 12225,
+    "es": 12210,
+    "fr": 12210,
+    "it": 12210,
+    "nl": 12210,
+    "pt": 12225
+  },
+  "by_primitive": {
+    "choice": 28500,
+    "noul": 28500,
+    "score": 28500
+  },
+  "config": "training/configs/data_sft_slm.json",
+  "config_sha256": "33802ba0ce35ed1128f23c40e2aa39ebec20afa0c2c1dde69f2066343fe9009d",
+  "dataset": "Tachyone-SLM-Mixture-v1",
+  "domains": [
+    "support",
+    "ecommerce",
+    "agent_tools",
+    "documents",
+    "voice"
+  ],
+  "generator": "training/generate_data.py (upstream pipeline, unmodified)",
+  "languages": [
+    "en",
+    "pt",
+    "es",
+    "fr",
+    "de",
+    "it",
+    "nl"
+  ],
+  "mixture_sha256": "563d0c631fa35aed19e4a93ab1f3b4237e7544ef5646f347650fbdf06d27df15",
+  "noise_rate": 0.0,
+  "per_cell_language_x_domain": {
+    "de": {
+      "agent_tools": 2442,
+      "documents": 2442,
+      "ecommerce": 2442,
+      "support": 2442,
+      "voice": 2442
+    },
+    "en": {
+      "agent_tools": 2445,
+      "documents": 2445,
+      "ecommerce": 2445,
+      "support": 2445,
+      "voice": 2445
+    },
+    "es": {
+      "agent_tools": 2442,
+      "documents": 2442,
+      "ecommerce": 2442,
+      "support": 2442,
+      "voice": 2442
+    },
+    "fr": {
+      "agent_tools": 2442,
+      "documents": 2442,
+      "ecommerce": 2442,
+      "support": 2442,
+      "voice": 2442
+    },
+    "it": {
+      "agent_tools": 2442,
+      "documents": 2442,
+      "ecommerce": 2442,
+      "support": 2442,
+      "voice": 2442
+    },
+    "nl": {
+      "agent_tools": 2442,
+      "documents": 2442,
+      "ecommerce": 2442,
+      "support": 2442,
+      "voice": 2442
+    },
+    "pt": {
+      "agent_tools": 2445,
+      "documents": 2445,
+      "ecommerce": 2445,
+      "support": 2445,
+      "voice": 2445
+    }
+  },
+  "per_type": 5700,
+  "records": 85500,
+  "seed": 20261003
+}

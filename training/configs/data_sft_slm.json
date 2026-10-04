@@ -1,0 +1,22 @@
+{
+  "domains": [
+    "support",
+    "ecommerce",
+    "agent_tools",
+    "documents",
+    "voice"
+  ],
+  "languages": [
+    "en",
+    "pt",
+    "es",
+    "fr",
+    "de",
+    "it",
+    "nl"
+  ],
+  "noise_rate": 0.0,
+  "per_type": 5700,
+  "seed": 20261003,
+  "source": "synthetic"
+}

@@ -27,21 +27,23 @@
 
 ---
 
-## Milestone 1 — SFT Mixture Data (Days 2–3)
+## Milestone 1 — SFT Mixture Data (Days 2–3) — ✅ COMPLETE (2026-10-04)
 
 **Goal:** A reproducible, contamination-audited SFT dataset rendered from the wire protocol.
 
 ### Features
 
-**slm-mixture-data** — PLANNED
+**slm-mixture-data** — **COMPLETE** (DAT-01…08, 8/8 delivered)
 
-- `training/configs/data_sft_slm.json`: 7 languages (`en,pt,es,fr,de,it,nl`), 5 domains (`support,ecommerce,agent_tools,documents,voice`), ≈ 50,000 records, pinned seed
-- Labels derived from text (ADR-0014/ADR-0015): `noul` via phrase bank, `score` via tone, `choice` via state-named option
-- Golden-hash idempotence test, deterministic train/val split, per-record RNG
-- Contamination audit: eval sets absent from prompts and from the temperature-fit val split
-- SFT rendering: prompt = rendered wire request; target per PRD §3.4; validation grammar applied at pair generation
+- ✅ `training/configs/data_sft_slm.json`: 7 languages × 5 domains, seed **20261003** → 85,500 raw → **50,180 clean** records
+- ✅ Labels derived from text (ADR-0014/0015) — upstream generator imported **unmodified** (workspace package `slm_pipeline/` never shadows it)
+- ✅ Golden-hash idempotence + deterministic split (`sha256(line)%10` → 45,175 / 5,005), 16 tests green in 3 s
+- ✅ Contamination audit **pass**: overlap **0/0** after removing 35,320 colliding raw records (41.31% — shared phrase banks), 18,000 frozen records compared
+- ✅ SFT rendering: 50,180 pairs (wire-request prompt → §3.4 label), every prompt re-parsed by `tachyone.wire.parse_request`, **0 rejected**
 
-**Exit criteria:** golden-hash test green; audit record written; config matches PRD §3.3.
+**Exit criteria:** ✅ golden-hash test green; ✅ audit record written (`artifacts/slm-mixture-v1/audit.json`); ✅ config matches PRD §3.3.
+**Evidence:** `docs/slm-mixture-v1.md` (dataset card, sha256 of every artifact).
+**Open follow-ups:** WS-B-019 (publish dataset to HF), WS-B-020 (probe audit when probe data exists).
 
 ---
 

@@ -1,0 +1,34 @@
+{
+  "dataset": "Tachyone-SLM-Mixture-v1",
+  "empty_states_excluded": {
+    "frozen": 972,
+    "mixture": 4500,
+    "note": "empty states carry no information; counted, never matched"
+  },
+  "frozen_records": 18000,
+  "frozen_sources": {
+    "eval_en": 1500,
+    "eval_en_domains": 7500,
+    "eval_multi": 1500,
+    "eval_multi_domains": 7500
+  },
+  "overlap": {
+    "mixture": {
+      "prompt_fingerprints": 0,
+      "state_texts": 0
+    },
+    "temperature_fit_val": {
+      "prompt_fingerprints": 0,
+      "state_texts": 0
+    }
+  },
+  "probes": {
+    "reason": "generator inputs are the phrase banks in code + training/data/domains/*.json; no external dataset import path exists",
+    "status": {
+      "data/massive": "skipped \u2014 absent locally",
+      "data/typed-decisions": "skipped \u2014 absent locally",
+      "data/xnli": "skipped \u2014 absent locally"
+    }
+  },
+  "result": "pass"
+}

@@ -1,7 +1,7 @@
 # State
 
-**Last Updated:** 2026-10-03
-**Current Work:** **Phase 0 executed** — baselines measured (24 artifacts), PRD bumped to v1.2.0 with fixed targets, context decided (2,048); next: Phase 1 data (after ADR-0017 gate for Phase 2)
+**Last Updated:** 2026-10-04
+**Current Work:** **Phase 1 delivered** — `Tachyone-SLM-Mixture-v1` (50,180 clean SFT pairs, audit pass, 16 tests green); next: **ADR-0017 gate** then Phase 2 training (PRD §6)
 
 > **ID convention:** decisions/blockers/lessons created **in this workspace** use the `WS-` prefix (`WS-AD-NNN`, `WS-B-NNN`, `WS-L-NNN`) so they never collide with the canonical `AD-009`, `B-5…B-13`, `L-005…L-016` IDs owned by the upstream repository `munod/tachyone` (see PRD §10). Upstream IDs are **referenced, not duplicated**.
 
@@ -69,6 +69,14 @@
 **Trade-off:** the anchor set is multilingual five-domain; English-specific behaviour of the abstained slice stays unmeasured (alternatives recorded in PRD §8: higher τ — sweep 0.3–0.95 in `docs/phase0-baseline.md` §1 — or harder eval sets).
 **Impact:** PRD §2, §7.2; Phase 4/5 acceptance runs against this denominator.
 
+### WS-AD-009: Contamination handling = dedup + raw/clean file naming (2026-10-04)
+
+**Decision:** Raw generation is written to `data/*.raw.jsonl`; the canonical `tachyone_slm_mixture_v1.jsonl` name belongs to the **deduplicated** dataset. Records matching a frozen eval set by *state text* or *prompt fingerprint* are removed **before** split and rendering, then the audit is re-run.
+**Reason:** the phrase banks are shared between our mixture and the frozen sets, so a distinct seed is not enough — **41.31%** of raw records collide (measured 2026-10-03). DAT-04 AC2 sanctions exactly this remedy ("records be removed and the audit re-run — never proceed silently").
+**Trade-off:** `per_type` had to rise 3333 → **5700** (85,500 raw) to land ≈50k clean; 41% of generation is discarded and `noul` loses most (its states are the most templated → 13,607 pairs left).
+**Impact:** `training/configs/data_sft_slm.json`, `slm_pipeline/prepare_sft.py`, dataset card §2; Phase 2 must train from the clean/split files only, never from `*.raw.jsonl`.
+**Recorded in:** `docs/slm-mixture-v1.md` §2.
+
 ---
 
 ## Active Blockers
@@ -111,6 +119,8 @@
 | WS-L-002 | **The wire payload carries no `max_tokens`**: free-generation clients ran away (measured 6,024 tokens ≈ 39 s for one row, which alone made a dataset take ~1 h). llama-server must be capped (`-n 1024`) or the scoring mode (§3.4) must be used — both recorded as protocol notes. | 2026-10-03 | Phases 4–5, benchmark harness |
 | WS-L-003 | **The five-domain fitted-bank checkpoints are not distributed** (no Hub model, no release asset): System-1 with the deployable Hub adapters scores 0.9145 on `eval_multi_domains`, not the 0.997 quoted for `multi_b5b_fit_bank`. Never mix the two in one table. | 2026-10-03 | PRD §2 baseline column, Phase 5 |
 | WS-L-004 | **Harness protocol deviations must be written next to the number**: `-n 1024` cap, Ollama rows uncapped, 192-row val fit, fixed T=1.0 on the 1- and 4-row slices. All seven are listed in `docs/phase0-baseline.md` §5. | 2026-10-03 | every future benchmark |
+| WS-L-005 | **A different seed does not buy contamination isolation** when two datasets share phrase banks: 41.31% of raw mixture records matched a frozen eval row despite seed 20261003 vs 2. Audit by *content* (state + prompt fingerprint), dedup, re-audit — and budget for the drop when sizing `per_type`. | 2026-10-04 | Phase 1, any future data generation |
+| WS-L-006 | **Never let the workspace package shadow an upstream one**: a workspace `training/` package hid the clone's `training.generate_data` (PEP 420 gives a regular package priority). Workspace tooling lives in `slm_pipeline/`; `training/configs/` stays as plain data (DAT-01 path). | 2026-10-04 | all workspace tooling |
 
 ---
 
@@ -125,6 +135,7 @@
 | 005 | **Phase 0 executed** — clone + env, datasets (golden 46/46), slices, 4 engines × 4 slices, context A/B, report `docs/phase0-baseline.md` | 2026-10-03 | — | ✅ Done |
 | 006 | PRD v1.1.0 → **v1.2.0**: §2 targets fixed, §3.1 context decided, §6/§7/§8 updated | 2026-10-03 | — | ✅ Done |
 | 007 | **Git bootstrap** — `git init -b main`, remote `origin git@github.com:munod/tachyone_slm.git`, initial commit pushed (`2122616`, 71 files / 748 KB); `.opencode/`, `site/` and `logs/` excluded by `.gitignore` | 2026-10-03 | `2122616` | ✅ Done |
+| 008 | **Phase 1 delivered** — `slm_pipeline/` (generate → dedup → split → render → audit), config `data_sft_slm.json`, 16 tests, dataset card `docs/slm-mixture-v1.md` | 2026-10-04 | pending commit | ✅ Done |
 
 ---
 
@@ -141,13 +152,16 @@
 ## Todos
 
 - [x] Run Phase 0 baselines and fix numeric accuracy targets in PRD §2 — **done 2026-10-03** (PRD v1.2.0)
-- [ ] **Appro PRD v1.2.0** (maintainer) — the only thing between Phase 0 and "approved"
-- [ ] Publish ADR-0017 (training/export stack) + schema annex (PRD §5.4) in `munod/tachyone`
+- [x] Build `Tachyone-SLM-Mixture-v1` (config, dedup, split, render, audit, provenance) — **done 2026-10-04** (DAT-01…08)
+- [ ] **Appro PRD v1.2.0** (maintainer) — closes Phase 0
+- [ ] Publish ADR-0017 (training/export stack) + schema annex (PRD §5.4) in `munod/tachyone` — **gates Phase 2**
+- [ ] Publish `Tachyone-SLM-Mixture-v1` to HF (`munod/tachyone_slm`) — **only on request** (WS-B-019)
 - [ ] Fill `docs/model-card.md` placeholders in Phase 5
 - [ ] Add the SLM engine row to `benchmarks/compare.py` (Phase 5)
-- [ ] Extend `mkdocs.yml` nav as new pages land (`docs/phase0-baseline.md` pending nav entry — WS-B-013)
+- [x] Extend `mkdocs.yml` nav as new pages land (`phase0-baseline` + `slm-mixture-v1` added — WS-B-013 covered)
+- [ ] Re-run the probe contamination audit when probe data exists (WS-B-020)
 - [x] `git init` + initial commit — **only if/when explicitly requested** — **done 2026-10-03** (remote `munod/tachyone_slm`, commit `2122616`)
-- [ ] Update ROADMAP statuses as phases start/complete
+- [ ] Update ROADMAP statuses as phases start/complete — **Milestones 0 and 1 complete**
 
 ---
 
