@@ -20,6 +20,7 @@ nav:
       - "DEC-002: Training/export stack (ADR-0017 pending)": decisions/training-export-stack.md
       - "DEC-003: Spec location (.specs/)": decisions/spec-location.md
       - "DEC-004: Documentation language": decisions/docs-language.md
+      - "DEC-005: Product scope (upstream read-only)": decisions/product-scope.md
 
 # Gate: `mkdocs build --strict` must stay green (PRD §6).
 # Keep nav entries in sync with files under docs/ (BACKLOG WS-B-013).

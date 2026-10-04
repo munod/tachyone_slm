@@ -1,18 +1,18 @@
 # Phase 3 — Export & Quantization Specification
 
-**Feature ID:** `slm-export-quant` · **Prefix:** `EXP` · **Phase:** 3 (Day 6) · **Status:** Planned — depends on Phase 2 checkpoint + ADR-0017
+**Feature ID:** `slm-export-quant` · **Prefix:** `EXP` · **Phase:** 3 (Day 6) · **Status:** Planned — depends on Phase 2 checkpoint + **DEC-002** (local); frozen by WS-B-022
 **PRD source:** `docs/tachyone_prd.md` v1.1.0 — §4 (performance optimization, hardware matrix), §2 (VRAM KPI), §6 Fase 3, §7.5 (acceptance), §8 (Ada availability / new deps risks)
 
 ---
 
 ## Problem Statement
 
-A trained adapter is not a servable System-2. The merged model must be exported to a real inference stack and quantized so it fits the VRAM budget — ≤ 1.6 GB additional (bf16) / ≤ 1.0 GB (INT4/FP8) — on the actual hardware matrix: RTX 3060 (Ampere, **no FP8**) for the main path and NVIDIA L4 (Ada) only for the stretch. The stack choice (vLLM vs TensorRT-LLM) is recorded in ADR-0017 and must not be re-litigated here.
+A trained adapter is not a servable System-2. The merged model must be exported to a real inference stack and quantized so it fits the VRAM budget — ≤ 1.6 GB additional (bf16) / ≤ 1.0 GB (INT4/FP8) — on the actual hardware matrix: RTX 3060 (Ampere, **no FP8**) for the main path and NVIDIA L4 (Ada) only for the stretch. The stack choice (vLLM vs TensorRT-LLM) is recorded in **DEC-002** (local, PRD v2.0 — no upstream ADR) and must not be re-litigated here.
 
 ## Goals
 
 - [ ] LoRA weights merged into the trunk (single deployable model).
-- [ ] Export to the ADR-0017-chosen engine (vLLM or TensorRT-LLM).
+- [ ] Export to the DEC-002-chosen engine (vLLM or TensorRT-LLM).
 - [ ] Quantization matrix produced: bf16 reference, INT4 (AWQ/GPTQ) @ 3060, FP8 @ L4.
 - [ ] Additional VRAM measured in-harness against both KPI bounds.
 - [ ] Serving flags (prefix caching, CUDA Graphs/warm-up shapes) configured — as configuration, not custom code.
@@ -21,7 +21,7 @@ A trained adapter is not a servable System-2. The merged model must be exported 
 
 | Item | Reason |
 | --- | --- |
-| Deciding vLLM vs TensorRT-LLM | ADR-0017 (DEC-002, pending upstream) |
+| Deciding vLLM vs TensorRT-LLM | **DEC-002 (local, pending)** |
 | Training or re-training | Phase 2 |
 | End-to-end KPI benchmarking (latency, accuracy, ECE) | Phase 4/5 (this phase only exports + measures VRAM/loads) |
 | Custom CUDA kernels / speculative decoding | §4.6 optional, measured later; not a Phase 3 prerequisite |
@@ -40,7 +40,7 @@ A trained adapter is not a servable System-2. The merged model must be exported 
 **Acceptance Criteria**:
 
 1. WHEN merging THEN the LoRA weights SHALL be merged into the trunk producing one set of weights (§4.1).
-2. WHEN exporting THEN the target engine SHALL be the one recorded in **ADR-0017** (§4.1); if ADR-0017 is missing, work SHALL stop (WS-B-002).
+2. WHEN exporting THEN the target engine SHALL be the one recorded in **DEC-002** (§4.1); if DEC-002 carries no verdict, work SHALL stop (WS-B-002).
 3. WHEN the export completes THEN the artifact SHALL load on the main-path GPU (RTX 3060) with the declared precision (§4 matrix).
 4. WHEN the merged model answers THEN its outputs SHALL be equivalent to the pre-merge adapter on a fixed probe set (merge sanity check).
 
@@ -102,7 +102,7 @@ A trained adapter is not a servable System-2. The merged model must be exported 
 
 - WHEN no Ada/L4 GPU is available THEN FP8 artifacts SHALL be marked "not measured — hardware unavailable" and the main path (3060/INT4) proceeds unaffected (§8).
 - WHEN INT4 quantization degrades contract outputs THEN the variant SHALL be rejected in favor of the next viable precision, with the failure recorded.
-- WHEN new engine dependencies conflict with the repo's `uv` stack THEN extras SHALL be **opt-in** and recorded in ADR-0017 (§8 "novas dependências … extras `serve`/`train`/`fast` já existem como precedente").
+- WHEN new engine dependencies conflict with the repo's `uv` stack THEN extras SHALL be **opt-in** and recorded in DEC-002 (§8 "novas dependências … extras `serve`/`train`/`fast` já existem como precedente").
 - WHEN VRAM includes CUDA context THEN measurement SHALL state methodology (harness, additional to System-1) so the number is comparable (§2 note on the relaxed v1.0 bound).
 
 ---
@@ -112,7 +112,7 @@ A trained adapter is not a servable System-2. The merged model must be exported 
 | Requirement ID | Requirement | PRD | KPI / Criterion | Status |
 | --- | --- | --- | --- | --- |
 | EXP-01 | LoRA merge into trunk | §4.1 | enables serving | Pending |
-| EXP-02 | Export to ADR-0017 engine (vLLM or TRT-LLM); stop if ADR missing | §4.1, §6 | §7.6 | Pending |
+| EXP-02 | Export to DEC-002 engine (vLLM or TRT-LLM); stop if the decision has no verdict | §4.1, §6 | §7.6 | Pending |
 | EXP-03 | Variants: bf16 / INT4 (AWQ·GPTQ) @3060 / FP8 @L4 — FP8 Ada-only | §4.2 | §7.5 precision matrix | Pending |
 | EXP-04 | Additional VRAM ≤ 1.6 GB bf16, ≤ 1.0 GB INT4/FP8, harness-measured, GPU declared | §2, §4 | §7.5 | Pending |
 | EXP-05 | Main path independent of Ada/FP8 | §4.2, §8 | robustness of §7.5 | Pending |
@@ -135,4 +135,4 @@ A trained adapter is not a servable System-2. The merged model must be exported 
 
 - [ ] Artifact loads and answers schema-validly on the RTX 3060 main path.
 - [ ] VRAM KPI evidenced for bf16 and at least one of INT4/FP8 within bounds.
-- [ ] ADR-0017 referenced (not contradicted) for engine + dependency choices.
+- [ ] DEC-002 referenced (not contradicted) for engine + dependency choices.

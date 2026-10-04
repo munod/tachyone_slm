@@ -1,17 +1,17 @@
 # Phase 2 — LoRA / SFT Training Specification
 
-**Feature ID:** `slm-lora-sft` · **Prefix:** `SFT` · **Phase:** 2 (Days 4–5) · **Status:** Planned — **blocked by ADR-0017 (WS-B-002)**
-**PRD source:** `docs/tachyone_prd.md` v1.1.0 — §3.1 (base/context), §3.2 (training tactic), §6 Fase 2, §7.2 (no regression), §8 (variance / English regression risks)
+**Feature ID:** `slm-lora-sft` · **Prefix:** `SFT` · **Phase:** 2 (Days 4–5) · **Status:** Planned — **gated by DEC-002 (local stack decision) + FROZEN by WS-B-022 until JevBench #182 closes**
+**PRD source:** `docs/tachyone_prd.md` **v2.0.0** — §3.1 (base/context), §3.2 (training tactic), §6 Fase 2, §7.2 (no regression), §8 (variance / English regression risks)
 
 ---
 
 ## Problem Statement
 
-The base model must be fine-tuned into a System-2 answerer that beats the Phase 0 slice targets **without** regressing `eval_en` (1.000) — on a single consumer GPU, in ~4–12 h, with a training loop whose own non-determinism already produced 0.76–0.79 on the same seed (L-005/L-006). The training stack choice itself is an open decision (ADR-0017) and **must be published before any training code is written** (§6: "ADR-0017 antes de codar").
+The base model must be fine-tuned into a System-2 answerer that beats the Phase 0 slice targets **without** regressing `eval_en` (1.000) — on a single consumer GPU, in ~4–12 h, with a training loop whose own non-determinism already produced 0.76–0.79 on the same seed (L-005/L-006). The training stack choice itself is an open decision recorded **locally as DEC-002** — PRD v2.0 removed the upstream-ADR requirement because training code lives in *this* repo and `munod/tachyone` is read-only (`WS-AD-010`) — and it **must be recorded before any training code is written** (§6 Fase 2).
 
 ## Goals
 
-- [ ] ADR-0017 published (stack decision recorded) before training code exists.
+- [ ] Stack decision recorded as **DEC-002 (local)** before training code exists.
 - [ ] LoRA/SFT run with the hyperparameters frozen in §3.2, effective batch declared, pinned seed.
 - [ ] Early stopping on `eval_en` **+** the abstained slice; gating on the worst domain/language.
 - [ ] Checkpoint + eval report showing slice accuracy vs the Phase 0 target and no `eval_en` regression.
@@ -20,7 +20,7 @@ The base model must be fine-tuned into a System-2 answerer that beats the Phase 
 
 | Item | Reason |
 | --- | --- |
-| Choosing the training/export stack (decision content) | ADR-0017 (DEC-002 — pending, upstream) |
+| Choosing the training/export stack (decision content) | **DEC-002** (local, pending; upstream ADR-0017 out of scope since PRD v2.0) |
 | Re-training or touching System-1 | PRD §1.4 |
 | Export / quantization / serving | Phase 3 |
 | Models ≥ 1B, MoE adapters | PRD §1.4 |
@@ -38,7 +38,7 @@ The base model must be fine-tuned into a System-2 answerer that beats the Phase 
 
 **Acceptance Criteria**:
 
-1. WHEN training starts THEN a published ADR-0017 SHALL exist (§6 Fase 2 — hard gate).
+1. WHEN training starts THEN **DEC-002** SHALL be recorded in this repo (§6 Fase 2 — hard gate; no upstream artifact, `WS-AD-010`).
 2. WHEN configured THEN LoRA SHALL target `q_proj, k_proj, v_proj, o_proj, gate_proj, up_proj, down_proj` in **bfloat16** with `r = 16`, `α = 32`, dropout `0,05`, LR `2e-4` + Cosine Decay, **effective batch 32 declared** (gradient accumulation), AdamW, 3–5 epochs (§3.2).
 3. WHEN early stopping triggers THEN it SHALL consider `eval_en` **and** the abstained slice (§3.2).
 4. WHEN the run ends THEN the checkpoint, the exact config, the seed and the metrics per epoch SHALL be recorded as run artifacts.
@@ -113,7 +113,7 @@ The base model must be fine-tuned into a System-2 answerer that beats the Phase 
 
 | Requirement ID | Requirement | PRD | KPI / Criterion | Status |
 | --- | --- | --- | --- | --- |
-| SFT-01 | ADR-0017 published before training code | §4.1, §6 Fase 2 | §7.6 (process) | Pending — blocked |
+| SFT-01 | Stack decision (DEC-002) recorded before training code | §4.1, §6 Fase 2 | §7.6 (process) | Pending — frozen by WS-B-022 |
 | SFT-02 | LoRA recipe frozen (modules, r, α, dropout, LR+cosine, batch 32 effective, AdamW, 3–5 ep) | §3.2 | enables G4 | Pending |
 | SFT-03 | Early stopping on `eval_en` + abstained slice | §3.2 | §7.2 no regression | Pending |
 | SFT-04 | Discipline: pinned seed, config verification, control-first, worst-cell gating, explicit adapter | §3.2 | validity of §7.2 | Pending |
@@ -128,7 +128,7 @@ The base model must be fine-tuned into a System-2 answerer that beats the Phase 
 
 ## Verification (Phase 2 exit)
 
-- **Hard gate:** ADR-0017 exists upstream (else STOP — WS-B-002).
+- **Hard gate:** DEC-002 recorded in this repo **and** the JevBench freeze lifted (else STOP — WS-B-022).
 - **Gates:** `ruff check` · `ruff format --check` · `pyright` · `pytest` · `mkdocs build --strict`.
 - **Artifacts:** checkpoint/adapter, run manifest (config + seed), per-epoch metrics, control-vs-experiment comparison, worst-cell table, slice-vs-target readout.
 - **Numeric honesty:** slice target values are those fixed in Phase 0 — never re-guessed here (WS-AD-006).

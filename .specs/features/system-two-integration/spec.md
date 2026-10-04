@@ -1,18 +1,18 @@
-# Phase 4 — System-2 Integration Specification (`system_two()`)
+# Phase 4 — System-2 Integration Specification (serving shim)
 
 **Feature ID:** `system-two-integration` · **Prefix:** `INT` · **Phase:** 4 (Days 7–8) · **Status:** Planned
-**PRD source:** `docs/tachyone_prd.md` v1.1.0 — §1.2 (handoff), §3.4 (decoding), §3.5 (calibration), §5.1–§5.4 (interface/integration/τ/schema), §7.1, §7.2, §7.4 (acceptance)
+**PRD source:** `docs/tachyone_prd.md` **v2.0.0** — §1.2 (handoff), §3.4 (decoding), §3.5 (calibration), §5.1–§5.4 (interface/integration/τ/schema), §7.1, §7.2, §7.4 (acceptance)
 **Design:** `.specs/features/system-two-integration/design.md` · **Decision:** `docs/decisions/decoding-strategy.md` (DEC-001)
 
 ---
 
 ## Problem Statement
 
-The handoff slot `system_two()` is currently a user-supplied stub (B-3, `cookbook-handoff.md`). The SLM must become its **official implementation**: invoked only when the encoder abstains, answering strictly inside the frozen wire contract, with calibrated confidence and a documented τ/retry/fallback policy — while `tests/test_contract_wire.py` remains untouched and green.
+Upstream keeps `system_two()` as a **user-supplied stub** (B-3, `cookbook-handoff.md`) — PRD v2.0 no longer asks us to fill it there. The SLM occupies that slot **as an option of the existing `llm` backend**: a **serving shim** that exposes an OpenAI-compatible endpoint, runs the §3.4 candidate scoring **inside itself**, assembles `answers` from logits, and is selected purely by configuration (`TACHYONE_BACKEND=llm` + `TACHYONE_LLM_BASE_URL`/`MODEL`) — invoked when the encoder abstains, with calibrated confidence and a documented τ/retry/fallback policy, while `tests/test_contract_wire.py` remains untouched and green.
 
 ## Goals
 
-- [ ] `system_two(state, questions, context)` implemented, exported in the SDK (`tachyone.system_two`) + CLI flag; cookbook example migrated from stub.
+- [ ] **Serving shim** implemented here: OpenAI-compatible endpoint running §3.4 scoring and assembling `answers` from logits; activated by config. **No upstream SDK/CLI changes** (v2.0, `WS-AD-010`); **our** cookbook ships in this repo.
 - [ ] Default decoding = candidate scoring per §3.4; wire invariants satisfied **by construction**.
 - [ ] Temperature scaling fitted per (primitive, language); ECE ≤ 0.030 with Brier + `Conf` published.
 - [ ] τ configurable (reference 0.6), max 1 retry, explicit fallback chain; `JSON ok` = 1.000; handoff coverage 100%.
@@ -124,7 +124,7 @@ The handoff slot `system_two()` is currently a user-supplied stub (B-3, `cookboo
 **Acceptance Criteria**:
 
 1. WHEN validating (any mode) THEN the contract grammar/JSON Schema SHALL act as the **final verification** in default mode and as the **source** of constrained decoding in experimental mode (§5.4).
-2. WHEN publishing THEN the schema SHALL be an **annex of ADR-0017**, tested against `tests/test_contract_wire.py` (§5.4).
+2. WHEN publishing THEN the schema SHALL be an **annex of `DEC-002` in this repo**, tested against `tests/test_contract_wire.py` **read-only** (§5.4, `WS-AD-010`).
 
 **Independent Test**: schema validation passes over produced responses; contract suite green.
 
@@ -158,7 +158,7 @@ The handoff slot `system_two()` is currently a user-supplied stub (B-3, `cookboo
 | INT-11 | Calibration asset failure warns by name (B-8), never silent | §3.5 | §7.4 integrity | Pending |
 | INT-12 | Confidence/probabilities from logits + fit — never generated text | §3.4 | §7.1/§7.4 | Pending |
 | INT-13 | Experimental constrained-generation mode (opt-in): grammar from contract, scratchpad discarded, rescoring for probabilities | §3.4, §5.4 | §7.1 (mode-on) | Pending |
-| INT-14 | Schema as final verification (default) / decoding source (experimental); annex of ADR-0017 | §5.4 | §7.6 | Pending |
+| INT-14 | Schema as final verification (default) / decoding source (experimental); annex of DEC-002 | §5.4 | §7.6 | Pending |
 | INT-15 | `usage` reported (input_tokens counted, output_tokens 0 in default mode) | §5.1 | contract fidelity | Pending |
 
 **Coverage:** 15 requirements, 0 unmapped.

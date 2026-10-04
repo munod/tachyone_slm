@@ -52,7 +52,7 @@ graph TD
 | --- | --- |
 | System-1 / handoff | Consume `HandoffReport` read-only (B-3 client-side pattern) |
 | SDK / CLI | Export `tachyone.system_two`; add CLI flag (§5.2) |
-| Serving engines | Embedded (transformers/peft) default; vLLM/TRT-LLM optional per ADR-0017 (§5.2) |
+| Serving engines | Embedded (transformers/peft) default; vLLM/TRT-LLM optional per DEC-002 (§5.2) |
 | Wire | Same request/response JSON — zero new fields (ADR-0001) |
 
 ---
@@ -79,7 +79,7 @@ graph TD
 - **Purpose:** Generate only the values of the `answers` wrapper under the contract grammar; allow a discarded scratchpad.
 - **Interfaces:** grammar/JSON Schema from the contract (XGrammar/llguidance or vLLM `guided_json`); runtime assembles final JSON; probabilities via rescoring.
 - **Dependencies:** Phase 3 engine with guided decoding support.
-- **Reuses:** §5.4 schema (also the annex of ADR-0017).
+- **Reuses:** §5.4 schema (also the annex of DEC-002).
 
 ### Calibration layer
 

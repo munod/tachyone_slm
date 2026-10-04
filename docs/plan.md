@@ -2,9 +2,9 @@
 
 > ⏸️ **PAUSED (2026-10-04)** — see `docs/jevbench-noninterference.md` (freeze until JevBench
 > #182 closes + board published) and `.specs/HANDOFF.md` (resume protocol).
-> Derived from **PRD v1.2.0** (`tachyone_prd.md`) §6 (plan), §7 (acceptance), §8 (risks), §9 (traceability).
+> Derived from **PRD v2.0.0** (`tachyone_prd.md`) §6 (plan), §7 (acceptance), §8 (risks), §9 (traceability).
 > Status of every phase: **Phase 0 ✅ (2026-10-03)** and **Phase 1 ✅ (2026-10-04)** complete;
-> Phases 2–5 **PAUSED** (WS-B-022; Phase 2 also gated by ADR-0017) — see `.specs/project/ROADMAP.md`.
+> Phases 2–5 **PAUSED** (WS-B-022; Phase 2 also gated by DEC-002) — see `.specs/project/ROADMAP.md`.
 
 ---
 
@@ -19,10 +19,10 @@
 | --- | --- | --- | --- | --- |
 | **0 — Baseline System-2** ✅ | 1 | Measure System-1 + LLM candidates on the abstained slice; **fix numeric accuracy targets in PRD §2**; A/B context 2,048 vs 4,096 | ✅ `docs/phase0-baseline.md` + 24 artifacts; PRD §2 fixed (`≥0.723`/`≥0.474`, anchor n=264); context decided **2,048** | `.specs/features/baseline-system2/spec.md` |
 | **1 — SFT Mixture** ✅ | 2–3 | Generate `Tachyone-SLM-Mixture-v1` from the existing pipeline | ✅ config + 85,500 raw → **50,180 clean** (dedup 41.31%), split 45,175/5,005, 50,180 pairs, audit **pass 0/0**, 16 tests, `docs/slm-mixture-v1.md` | `.specs/features/slm-mixture-data/spec.md` |
-| **2 — SFT/LoRA Training** | 4–5 | Fine-tune the 0.5B base with the frozen §3.2 recipe | **ADR-0017 first**, adapter/checkpoint, run manifest, worst-cell eval, slice-vs-target readout (~4–12 h GPU) | `.specs/features/slm-lora-sft/spec.md` |
+| **2 — SFT/LoRA Training** | 4–5 | Fine-tune the 0.5B base with the frozen §3.2 recipe | **DEC-002 first**, adapter/checkpoint, run manifest, worst-cell eval, slice-vs-target readout (~4–12 h GPU) | `.specs/features/slm-lora-sft/spec.md` |
 | **3 — Export & Quantization** | 6 | Merge + deployable artifacts within the VRAM budget | Merged weights, bf16/INT4@3060/FP8@L4 variants, VRAM table, engine flags manifest | `.specs/features/slm-export-quant/spec.md` |
 | **4 — Integration** | 7–8 | Official `system_two()`, scoring decoding, calibration, τ/retry/fallback | SDK/CLI surfaces, cookbook migrated, calibration fit, coverage/`JSON ok` evidence; **contract suite untouched** | `.specs/features/system-two-integration/spec.md` (+ `design.md`) |
-| **5 — Benchmark & Docs** | 9–10 | Measure all KPIs; publish the English doc set as one unit | New `compare.py` engine row, `benchmarks/report.md`, ADR-0017/cookbook/README/model-card/CHANGELOG updated together | `.specs/features/slm-benchmark-docs/spec.md` |
+| **5 — Benchmark & Docs** | 9–10 | Measure all KPIs; publish the English doc set as one unit | Harness imported **read-only**, SLM row in our report, README/model-card/CHANGELOG/own cookbook updated together + **HF weights** | `.specs/features/slm-benchmark-docs/spec.md` |
 
 ---
 
@@ -40,7 +40,7 @@
 
 **Hard prerequisites (stop conditions):**
 
-- Phase 2 cannot start before **ADR-0017** is published ("ADR-0017 antes de codar", §6) — tracked as blocker **WS-B-002**.
+- Phase 2 cannot start before the stack decision **DEC-002** is recorded here (PRD §6 Fase 2, v2.0) — tracked as blocker **WS-B-002** (the upstream ADR was dropped).
 - Phase 4/5 acceptance numbers depend on Phase 0 fixing the slice targets — blocker **WS-B-001 ✅ RESOLVED** (PRD v1.2.0 §2).
 
 ---
@@ -54,7 +54,7 @@
 | 7.3 | Latency | Phase 5 | p50 **< 20 ms**, p95 **< 50 ms** in-engine; **≥ 50×** `ornith-9b`; stretch **< 8 ms** only with §4 preconditions |
 | 7.4 | Calibration | Phase 4/5 | ECE (10-bin, fitted per primitive × language) **≤ 0.030**, Brier + `Conf` published alongside |
 | 7.5 | Resources | Phases 3/5 | Additional VRAM ≤ **1.6 GB** (bf16) / ≤ **1.0 GB** (INT4/FP8); throughput ≥ **20 items/s** |
-| 7.6 | Process | Phase 5 | ADR-0017 published; gates green; doc surfaces updated **as a set** |
+| 7.6 | Process | Phase 5 | DEC-002 recorded (local); gates green; doc surfaces + HF weights updated **as a set** |
 
 **KPI ↔ section ↔ acceptance traceability** lives in PRD §9; requirement-level traceability lives in each feature spec (`Requirement Traceability` tables).
 
@@ -68,7 +68,7 @@
 | The abstained slice does not improve with 0.5B | JevBench hard ≈ chance; `noul` blind to rubric | **Phase 0 fixes the target before training**; a miss is recorded and the role re-evaluated (BSL-04, DOC-11) | 0, 5 |
 | Eval contamination via synthetic mixture | L-005 + frozen-eval rule | Overlap audit in Phase 1; public probes as external check (DAT-04) | 1 |
 | Stretch < 8 ms unreachable | Roofline: decode is bandwidth-bound; full JSON ≈ 60 tok | Hard meta stays **< 20 ms**; stretch conditioned on FP8@L4 + minimal output, *measured, not promised* (DOC-02, WS-B-012) | 5 |
-| New serving deps (vLLM/TRT-LLM) vs `uv` stack | extras `serve`/`train`/`fast` precedent | Decision in ADR-0017; extras **opt-in** (EXP-08) | 3 |
+| New serving deps (vLLM/TRT-LLM) vs `uv` stack | extras `serve`/`train`/`fast` precedent | Decision in DEC-002; extras **opt-in** (EXP-08) | 3 |
 | No Ada GPU for the stretch | L4 availability varies | Main path (3060/INT4) never depends on Ada (EXP-05) | 3, 5 |
 | English regression from fine-tuning | B-11/B-12 retrain history | Early stopping on `eval_en`; System-1 never retrained (SFT-05) | 2 |
 
@@ -95,8 +95,8 @@
 
 **Pending (next):**
 
-1. Maintainer approval of PRD v1.2.0 (**WS-B-015** — closes Phase 0).
-2. **ADR-0017 before any training code** (**WS-B-002**, gates Phase 2 — the only blocker left between here and GPU time).
+1. Maintainer approval of PRD **v2.0.0** (**WS-B-015** — re-scoped document).
+2. **Record DEC-002 before any training code** (**WS-B-002**, gates Phase 2 — the upstream ADR no longer exists as a requirement, PRD v2.0).
 3. Publish `Tachyone-SLM-Mixture-v1` to HF `munod/tachyone_slm` (**WS-B-019**, only on request — nothing uploads automatically).
 4. Phase 2 must gate on the worst cells: `noul` (13,607 pairs) and `en`×`support` (451 records) — **WS-B-021**.
 5. Decide the English-slice denominator question (WS-B-017) before Phase 5 acceptance.

@@ -23,8 +23,8 @@
 ## Pending (on resume — trigger: **#182 closed + board published**)
 
 1. Re-run the reachability audit (`docs/jevbench-noninterference.md` §2) — pins may move.
-2. Draft **ADR-0017** (training/export stack) — **explicit go-ahead required**; DEC-002 holds the criteria.
-3. Phase 2 SFT/LoRA training (gated by ADR-0017) → Phase 3 export → Phase 4 integration → Phase 5.
+2. Record **DEC-002** (training/export stack) **in this repo** — the upstream ADR was dropped by PRD v2.0.0 (DEC-005).
+3. Phase 2 SFT/LoRA training (gated by DEC-002) → Phase 3 export → Phase 4 serving shim → Phase 5.
 4. Maintainer approval of **PRD v1.2.0** (WS-B-015).
 
 ## Blockers
@@ -32,7 +32,7 @@
 - **Freeze until JevBench #182 closes** — no pushes to `munod/tachyone`, no ADR-0017 upstream, no
   releases, no edits to #182. Reason: the issue's snippet clones `main` **without checkout**
   (matrix §3 of the non-interference report). Maintainer decisions 2026-10-04.
-- **WS-B-002** — ADR-0017 not published (was already gating Phase 2; now also frozen).
+- **WS-B-002** — DEC-002 not recorded yet (gates Phase 2; PRD v2.0 dropped the upstream ADR).
 
 ## Context
 

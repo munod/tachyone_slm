@@ -1,20 +1,20 @@
 # Phase 5 — Benchmark & Publication Specification
 
 **Feature ID:** `slm-benchmark-docs` · **Prefix:** `DOC` · **Phase:** 5 (Days 9–10) · **Status:** Planned
-**PRD source:** `docs/tachyone_prd.md` v1.1.0 — §2 (KPI table + protocol), §5.2 (measure both engine modes), §6 Fase 5, §7 (all acceptance criteria), §8 (stretch risk), §9 (traceability)
+**PRD source:** `docs/tachyone_prd.md` **v2.0.0** — §2 (KPI table + protocol), §5.2 (measure both engine modes), §6 Fase 5, §7 (all acceptance criteria), §8 (stretch risk), §9 (traceability)
 
 ---
 
 ## Problem Statement
 
-Nothing counts until it is measured under the repository's own protocol and published. Phase 5 is where every KPI of §2 becomes an evidenced number (GPU declared, protocol-compliant) and where the English publication set ships **as one unit** — the AD-009 pattern — so that `AGENTS.md` gates and §7.6 process criteria are satisfied.
+Nothing counts until it is measured under the repository's own protocol and published. Phase 5 is where every KPI of §2 becomes an evidenced number (GPU declared, protocol-compliant) and where the English publication set ships **as one unit** — the AD-009 pattern — so that the **local** gates and the §7.6 process criterion (DEC-002 + doc set as a unit) are satisfied. The upstream harness is consumed **read-only** (`WS-AD-010`).
 
 ## Goals
 
-- [ ] New SLM engine row in `benchmarks/compare.py` (the 4 existing rows remain the yardstick).
+- [ ] Upstream harness **imported read-only** (never edited); the SLM row is recorded in **our** benchmark report (the 4 existing upstream rows remain the yardstick).
 - [ ] All §2 KPIs measured and published with GPU + method declared.
 - [ ] Embedded local engine vs external servers (vLLM/TRT-LLM) measured side by side.
-- [ ] English doc set updated as a set: ADR-0017, `docs/cookbook-handoff.md`, `README`, `docs/model-card.md`, `CHANGELOG.md`, `benchmarks/report.md`.
+- [ ] English doc set updated as a set **in this repo**: `README`, `docs/model-card.md`, `CHANGELOG.md`, our cookbook, local benchmark report — plus **weights + model card published to HF**.
 - [ ] PRD §7 checklist fully evidenced; PRD §2 targets confirmed (or honestly revised with data).
 
 ## Out of Scope
@@ -58,7 +58,7 @@ Nothing counts until it is measured under the repository's own protocol and publ
 
 **Acceptance Criteria**:
 
-1. WHEN Phase 5 closes THEN **ADR-0017**, `docs/cookbook-handoff.md`, `README`, `docs/model-card.md`, `CHANGELOG.md` and `benchmarks/report.md` SHALL be updated **as a set** (§7.6, AD-009).
+1. WHEN Phase 5 closes THEN `README`, `docs/model-card.md`, `CHANGELOG.md`, our cookbook and the local benchmark report SHALL be updated **as a set**, and the HF weights + model card SHALL be published (§7.6, AD-009).
 2. WHEN docs are written THEN they SHALL be in **English** (§6 gate) except the PRD, which remains Portuguese (DEC-004).
 3. WHEN processes are checked THEN conventional commits and all daily gates SHALL be green (`ruff check`, `ruff format --check`, `pyright`, `pytest`, `mkdocs build --strict`) (§6).
 
@@ -103,7 +103,7 @@ Nothing counts until it is measured under the repository's own protocol and publ
 
 - WHEN hardware for FP8 (Ada) is unavailable during Phase 5 THEN stretch results SHALL be marked *not measured — hardware unavailable*; main-path KPIs proceed on 3060 (§8).
 - WHEN the harness result differs from Phase 4's internal test THEN the harness number is authoritative (§2 protocol rule).
-- WHEN a doc surface has no change to publish (e.g., ADR-0017 already final) THEN the set-update SHALL still touch/confirm it (AD-009).
+- WHEN a doc surface has no change to publish THEN the set-update SHALL still touch/confirm it (AD-009).
 - WHEN `mkdocs build --strict` fails on a new page's nav entry THEN `mkdocs.yml` SHALL be updated in the same change (WS-B-013).
 
 ---
@@ -137,7 +137,7 @@ Nothing counts until it is measured under the repository's own protocol and publ
 | 7.3 | p50/p95 + ≥50× table with GPU/method; stretch labeled |
 | 7.4 | ECE/Brier/`Conf` triple |
 | 7.5 | VRAM + throughput rows |
-| 7.6 | ADR-0017 published; gates green; 6-surface publication set |
+| 7.6 | DEC-002 recorded (local); gates green; publication set + HF weights |
 
 **Gates:** `ruff check` · `ruff format --check` · `pyright` · `pytest` · `mkdocs build --strict` · conventional commits · English docs (§6).
 

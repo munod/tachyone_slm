@@ -2,7 +2,7 @@
 
 > *"Beyond the Speed of Light"* — the official **local System-2** of the TachyOne System-1/System-2 hybrid.
 
-**Status:** ⏸️ **PAUSED (2026-10-04)** — Phases 0 and 1 are complete (PRD **v1.2.0** with fixed targets · [`docs/phase0-baseline.md`](docs/phase0-baseline.md); `Tachyone-SLM-Mixture-v1` published with 50,180 clean SFT pairs · [`docs/slm-mixture-v1.md`](docs/slm-mixture-v1.md)). **Resume trigger:** JevBench [#182](https://github.com/fstandhartinger/jevbench/issues/182) **closed + board published**. During the freeze nothing is pushed to `munod/tachyone` and the issue is never touched — audit evidence: [`docs/jevbench-noninterference.md`](docs/jevbench-noninterference.md) · handoff: [`.specs/HANDOFF.md`](.specs/HANDOFF.md). **Product code lives in [`munod/tachyone`](https://github.com/munod/tachyone)** (frozen); this repo receives pushes.
+**Status:** ⏸️ **PAUSED (2026-10-04)** — Phases 0 and 1 are complete (PRD **v2.0.0**, re-scoped: product = SLM + serving shim **in this repo**; fixed targets · [`docs/phase0-baseline.md`](docs/phase0-baseline.md); `Tachyone-SLM-Mixture-v1` published with 50,180 clean SFT pairs · [`docs/slm-mixture-v1.md`](docs/slm-mixture-v1.md)). **Resume trigger:** JevBench [#182](https://github.com/fstandhartinger/jevbench/issues/182) **closed + board published**. During the freeze nothing is pushed to `munod/tachyone` and the issue is never touched — audit evidence: [`docs/jevbench-noninterference.md`](docs/jevbench-noninterference.md) · handoff: [`.specs/HANDOFF.md`](.specs/HANDOFF.md). **`munod/tachyone` is a read-only dependency** (`WS-AD-010`) — the product lives here and activates by configuration (`TACHYONE_BACKEND=llm`).
 
 ---
 
@@ -14,7 +14,7 @@ TachyOne SLM is a **Qwen2.5-0.5B-Instruct** model fine-tuned with **SFT via LoRA
 
 | Document | Role | Language |
 | --- | --- | --- |
-| [`docs/tachyone_prd.md`](docs/tachyone_prd.md) — **PRD v1.2.0** | Product source of truth: KPIs (§2), architecture (§3), performance plan (§4), interface (§5), phases (§6), acceptance (§7), risks (§8), traceability (§9) | 🇧🇷 Portuguese (original, unmodified) |
+| [`docs/tachyone_prd.md`](docs/tachyone_prd.md) — **PRD v2.0.0** | Product source of truth: KPIs (§2), architecture (§3), performance plan (§4), interface (§5), phases (§6), acceptance (§7), risks (§8), traceability (§9) | 🇧🇷 Portuguese (original, unmodified) |
 | [`.specs/`](.specs/README.md) | Spec-driven artifacts: project vision/roadmap/state/backlog + 6 feature specs with requirement IDs | 🇬🇧 English |
 | [`docs/`](docs/index.md) | Architecture, execution plan, decisions, model card, **Phase 0 baseline**, **dataset card** | 🇬🇧 English |
 
@@ -35,7 +35,7 @@ TachyOne SLM is a **Qwen2.5-0.5B-Instruct** model fine-tuned with **SFT via LoRA
 | --- | --- | --- | --- |
 | 0 | Baseline System-2 — fix numeric accuracy targets | 1 | ✅ **DONE** (2026-10-03) — targets `≥0.723`/`≥0.474`, context 2,048 |
 | 1 | SFT mixture data (`Tachyone-SLM-Mixture-v1`, ≈50k) | 2–3 | ✅ **DONE** (2026-10-04) — 50,180 clean pairs, audit pass |
-| 2 | LoRA/SFT training (**ADR-0017 first**) | 4–5 | PLANNED — blocked by ADR-0017 |
+| 2 | LoRA/SFT training (**DEC-002 first**, in this repo) | 4–5 | PLANNED — gated by DEC-002 + freeze |
 | 3 | Export & quantization (INT4@3060 / FP8@L4) | 6 | PLANNED |
 | 4 | `system_two()` integration, calibration, τ/retry/fallback | 7–8 | PLANNED |
 | 5 | Benchmark + English publication set | 9–10 | PLANNED |
@@ -53,11 +53,11 @@ TachyOne_SLM/                     ← this specification workspace
 ├── mkdocs.yml                    # docs nav (mkdocs build --strict gate)
 ├── conftest.py                   # test path setup
 ├── docs/
-│   ├── tachyone_prd.md           # PRD v1.2.0 (source of truth, Portuguese — do not overwrite)
+│   ├── tachyone_prd.md           # PRD v2.0.0 (source of truth, Portuguese — do not overwrite)
 │   ├── phase0-baseline.md        # Phase 0 measured baselines + protocol deviations
 │   ├── slm-mixture-v1.md         # dataset card / provenance (DAT-08)
 │   ├── index.md · architecture.md · plan.md · model-card.md
-│   └── decisions/                # spec-decisions (DEC-001…), incl. pending ADR-0017 record
+│   └── decisions/                # spec-decisions DEC-001…DEC-005 (DEC-005 = v2.0 re-scope)
 ├── .specs/                       # spec-driven artifacts (PROJECT / ROADMAP / STATE / BACKLOG / features)
 ├── training/configs/             # DAT-01: data_sft_slm.json (config only — code lives upstream)
 ├── slm_pipeline/                 # Phase 1 tooling: generate → dedup → split → render → audit

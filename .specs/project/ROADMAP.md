@@ -2,8 +2,8 @@
 
 **Current Milestone:** ⏸️ **none in progress** — Milestones 0–1 complete, 2–5 frozen
 **Status:** **PAUSED (2026-10-04)** — awaiting **JevBench #182 evaluation + board publication** (WS-B-022; evidence in `docs/jevbench-noninterference.md`)
-**Resume trigger:** #182 **closed** + **board published** → re-run reachability audit → ADR-0017 (go-ahead required)
-**Source of truth:** `docs/tachyone_prd.md` **v1.2.0** §6 (phases), §7 (acceptance), §8 (risks)
+**Resume trigger:** #182 **closed** + **board published** → re-run reachability audit → record DEC-002 → Phase 2
+**Source of truth:** `docs/tachyone_prd.md` **v2.0.0** §6 (phases), §7 (acceptance), §8 (risks)
 **Last Updated:** 2026-10-04
 
 ---
@@ -48,7 +48,7 @@
 
 ---
 
-## Milestone 2 — LoRA / SFT Training (Days 4–5) — ⏸️ PAUSED (WS-B-022; also gated by ADR-0017)
+## Milestone 2 — LoRA / SFT Training (Days 4–5) — ⏸️ PAUSED (WS-B-022; also gated by DEC-002)
 
 **Goal:** A fine-tuned adapter beating the Phase 0 slice targets without regressing `eval_en`.
 
@@ -56,7 +56,7 @@
 
 **slm-lora-sft** — PLANNED
 
-- **ADR-0017 published before any training code** (PRD §6 Fase 2)
+- **Stack decision recorded (DEC-002) before any training code** (PRD §6 Fase 2, v2.0 — upstream ADR dropped)
 - LoRA hyperparameters frozen per PRD §3.2 (r=16, α=32, dropout 0.05, LR 2e-4 cosine, effective batch 32, AdamW, 3–5 epochs)
 - Early stopping on `eval_en` **+** the abstained slice; gating on worst domain/language
 - Experiment discipline: pinned seed, pre-run config verification, control before variance claims, explicit adapter (never routed harness)
@@ -75,7 +75,7 @@
 **slm-export-quant** — PLANNED
 
 - Merge LoRA weights into the trunk
-- Export to vLLM (FP8) or TensorRT-LLM — choice recorded in ADR-0017
+- Export to vLLM (FP8) or TensorRT-LLM — choice recorded in DEC-002
 - Quantization matrix: INT4 (AWQ/GPTQ) for RTX 3060, FP8 for NVIDIA L4, bf16 reference
 - Additional VRAM measured in-harness: ≤ 1.6 GB (bf16) / ≤ 1.0 GB (INT4/FP8)
 - Engine flags only (prefix caching, CUDA Graphs/warm-up shapes) — no custom kernels
@@ -115,7 +115,7 @@
 - KPIs measured with GPU declared: p50/p95, ≥ 50× `ornith-9b`, ≥ 20 items/s, `JSON ok`, accuracy slice/composite, ECE/Brier/`Conf`, VRAM
 - Stretch `< 8 ms` recorded **only** with §4 preconditions (FP8@L4 + minimal output) and marked as stretch
 - Embedded local engine vs external servers (vLLM/TRT-LLM) both measured
-- English doc set updated **as a set**: ADR-0017, `docs/cookbook-handoff.md`, `README`, `docs/model-card.md`, `CHANGELOG.md`, `benchmarks/report.md`
+- English doc set updated **as a set** in this repo: `README`, `docs/model-card.md`, `CHANGELOG.md`, own cookbook, local benchmark report + **HF weights/model card**
 
 **Exit criteria:** PRD §7 checklist fully evidenced; gates green.
 

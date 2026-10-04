@@ -12,14 +12,14 @@
 
 | ID | Item | Priority | Phase | PRD ref | Status |
 | --- | --- | --- | --- | --- | --- |
-| WS-B-002 | **Publish ADR-0017** (training stack + export/serving stack) — planned only; must exist before any training code | P0 | 2 (draft) / 3 (final) | §4.1, §5.4, §6, §7.6 | ⏸️ **PAUSED** — publishing is a `munod/tachyone` push, frozen by WS-B-022 |
+| WS-B-002 | ~~Publish ADR-0017 upstream~~ → **record the stack decision as DEC-002 locally** (PRD v2.0 removed the upstream requirement; `munod/tachyone` is read-only) | P0 | 2 (draft) | §4.1, §5.4, §6, §7.6 | Open — scope changed by PRD v2.0.0 |
 | WS-B-004 | Contamination **overlap audit** record for `Tachyone-SLM-Mixture-v1` (prompts + temperature-fit val split vs eval sets) | P0 | 1 | §3.3, §8 | Open |
 | WS-B-005 | Golden-hash idempotence test + deterministic train/val split wired into `pytest` | P1 | 1 | §3.3 | Open |
 | WS-B-006 | Temperature-scaling fit per (primitive, language) with ECE + Brier + `Conf` reported together | P0 | 4 | §3.5, §7.4 | Open |
 | WS-B-007 | New engine row in `benchmarks/compare.py` + KPI tables in `benchmarks/report.md` (GPU declared) | P0 | 5 | §2, §7.3, §7.5 | Open |
 | WS-B-008 | Fill `docs/model-card.md` placeholders (metrics, eval data, VRAM, license) | P1 | 5 | §7.6 | Open |
 | WS-B-009 | Migrate `docs/cookbook-handoff.md` example from `system_two()` stub to the real implementation | P1 | 4–5 | §5.2, §7.6 | Open |
-| WS-B-010 | Publish the JSON Schema/grammar annex of the contract (annex of ADR-0017, tested against `tests/test_contract_wire.py`) | P1 | 4 | §5.4 | Open |
+| WS-B-010 | Publish the JSON Schema/grammar annex of the contract (annex of **DEC-002**, tested against `tests/test_contract_wire.py` read-only) | P1 | 4 | §5.4 | Open |
 | WS-B-011 | Measure embedded local engine **vs** external servers (vLLM/TRT-LLM) side by side | P2 | 5 | §5.2 | Open |
 | WS-B-012 | Record stretch `< 8 ms` only with preconditions met (FP8@L4 + minimal output); otherwise mark "not measured / not met" | P2 | 5 | §4.5, §7.3, §8 | Open |
 | WS-B-013 | Extend `mkdocs.yml` nav as new documentation pages land; keep `mkdocs build --strict` green | P3 | ongoing | §6 gates | Open |

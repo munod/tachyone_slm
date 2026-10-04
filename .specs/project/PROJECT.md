@@ -20,7 +20,7 @@
 - [ ] **G4 — Accuracy:** slice accuracy (τ = 0.6 reference) **≥ LLM candidate** *and* **≥ System-1** on the same slice — exact target **fixed in Phase 0**; composite accuracy (System-1 + handoff) **≥ System-1-only** — §7.2.
 - [ ] **G5 — Calibration:** ECE (10-bin, temperature fitted per primitive × language) **≤ 0.030**, with **Brier and `Conf` published alongside** — §7.4.
 - [ ] **G6 — Resources:** additional VRAM **≤ 1.6 GB** (bf16) / **≤ 1.0 GB** (INT4/FP8), measured in the harness — §7.5.
-- [ ] **G7 — Process:** ADR-0017 published; daily gates green; doc surfaces (`CHANGELOG`, `cookbook-handoff`, `model-card`, `benchmarks/report.md`) updated **as a set** — §7.6.
+- [ ] **G7 — Process:** stack decision recorded (**DEC-002**, local — PRD v2.0 removed the upstream-ADR requirement); daily gates green; doc surfaces (`CHANGELOG`, own cookbook, `model-card`, benchmark report) + HF weights updated **as a set** — §7.6.
 
 ---
 
@@ -33,11 +33,11 @@
 | Base model | `Qwen/Qwen2.5-0.5B-Instruct` (~490M params, vocab 151,643, native window 32,768) | §3.1 |
 | Service context | 2,048 tokens (A/B vs 4,096 decided in Phase 0; the v1.0 512-token cap is removed) | §3.1 |
 | Training | SFT + LoRA in bfloat16 (`q/k/v/o/gate/up/down_proj`, r=16, α=32, dropout 0.05, LR 2e-4 cosine, effective batch 32, AdamW, 3–5 epochs + early stopping) | §3.2 |
-| Recommended training stack | `training/finetune_rlcd.py` + peft (Unsloth only as justified extra) — **pending ADR-0017** | §6 Fase 2 |
+| Recommended training stack | `training/finetune_rlcd.py` + peft (Unsloth only as justified extra) — **pending DEC-002 (local)** | §6 Fase 2 |
 | Data | existing `training/generate_data.py` pipeline, new config `training/configs/data_sft_slm.json` (~50k records, 7 languages, 5 domains, pinned seed) | §3.3 |
 | Decoding | **candidate scoring by default** (no free generation); experimental constrained generation in Phase 4 | §3.4 |
 | Calibration | `training/fit_calibration.py` / `src/tachyone/calibration.py` — temperature scaling per (primitive, language) | §3.5 |
-| Serving | embedded local engine (transformers/peft) by default; vLLM / TensorRT-LLM optional — **pending ADR-0017** | §4, §5.2 |
+| Serving | **serving shim** (OpenAI-compatible, scoring from logits) + embedded local engine (transformers/peft) by default; vLLM / TensorRT-LLM optional — **pending DEC-002** | §4, §5.2 |
 | Benchmarks | `benchmarks/compare.py` (protocol: sequential, batch=1, warm-up excluded, same rows, same metric impl, GPU declared) | §2 |
 
 **Tooling / gates:** `uv` extras (`serve`/`train`/`fast` precedent) · `ruff check` · `ruff format --check` · `pyright` · `pytest` · `mkdocs build --strict` · conventional commits · docs/PRs in English (§6).

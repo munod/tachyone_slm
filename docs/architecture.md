@@ -1,6 +1,6 @@
 # Architecture — TachyOne SLM (System-2 Local)
 
-> Derived from **PRD v1.2.0** (`tachyone_prd.md`) §1, §3, §4, §5. No numbers are invented here — measurements come from `phase0-baseline.md` (Phase 0) or are marked *to be measured (Phase 4/5)*.
+> Derived from **PRD v2.0.0** (`tachyone_prd.md`) §1, §3, §4, §5. No numbers are invented here — measurements come from `phase0-baseline.md` (Phase 0) or are marked *to be measured (Phase 4/5)*.
 > Target code repository: [`munod/tachyone`](https://github.com/munod/tachyone).
 
 ---
@@ -108,7 +108,7 @@ flowchart TD
     AUDIT --> RENDER2["SFT rendering:<br/>prompt = wire request → target per §3.4<br/>validated by §5.4 grammar at generation"]
     RENDER2 --> LORA["LoRA/SFT (Phase 2):<br/>r=16 α=32 dropout 0.05 LR 2e-4 cosine<br/>effective batch 32 · AdamW · 3–5 epochs<br/>early stop on eval_en + abstained slice"]
     LORA --> MERGE["Merge LoRA → trunk (Phase 3)"]
-    MERGE --> EXPORT["Export: vLLM or TensorRT-LLM (ADR-0017)<br/>bf16 / INT4 (AWQ·GPTQ) @3060 · FP8 @L4"]
+    MERGE --> EXPORT["Export: vLLM or TensorRT-LLM (DEC-002)<br/>bf16 / INT4 (AWQ·GPTQ) @3060 · FP8 @L4"]
     EXPORT --> SERVE["Serving: embedded engine (default) · external servers (optional)"]
 ```
 
@@ -120,7 +120,7 @@ flowchart TD
 
 | Lever | What | Note |
 | --- | --- | --- |
-| Merge + export | LoRA → trunk → vLLM (FP8) or TRT-LLM | Stack decision in **ADR-0017 (pending)** |
+| Merge + export | LoRA → trunk → vLLM (FP8) or TRT-LLM | Stack decision in **DEC-002 (local, pending)** |
 | Hardware matrix | Train: RTX 3060 (bf16) or L4 · Serve main: RTX 3060 bf16/INT4 (Ampere, **no FP8**) · Stretch: L4 (Ada, FP8) | Main path never depends on Ada (§8) |
 | Prefix caching | Fixed template (`system`/`task`/`questions`) shared across requests | Engine **flag**, not code (§4.3) |
 | CUDA Graphs + warm-up | Reuse native capture of vLLM/TRT-LLM; warm-up shapes cover the service context | Repo `fast.py` seam belongs to the encoder (§4.4) |
@@ -141,8 +141,8 @@ flowchart TD
 | Remote LLM backend | `src/tachyone/backends/llm.py` | Fallback chain step 2 | 4 |
 | Calibration | `src/tachyone/calibration.py`, `training/fit_calibration.py` | Temperature scaling per (primitive, language) | 4 |
 | Data pipeline | `training/generate_data.py`, `training/configs/data_sft_slm.json` | SFT mixture generation | 1 |
-| Training | `training/finetune_rlcd.py` + peft (recommended; **ADR-0017**) | LoRA/SFT run | 2 |
-| Export/quantization | vLLM or TensorRT-LLM (**ADR-0017**) | bf16 / INT4 / FP8 artifacts | 3 |
+| Training | `training/finetune_rlcd.py` + peft (recommended; **DEC-002**) — run **in this repo** | LoRA/SFT run | 2 |
+| Export/quantization | vLLM or TensorRT-LLM (**DEC-002**) | bf16 / INT4 / FP8 artifacts | 3 |
 | Benchmarks | `benchmarks/compare.py`, `benchmarks/report.md` | Protocol harness; new SLM engine row | 5 |
 | Contract tests | `tests/test_contract_wire.py` | Must stay untouched & green | 4–5 |
 

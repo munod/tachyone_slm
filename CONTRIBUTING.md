@@ -7,7 +7,7 @@ Thanks for contributing to the **TachyOne SLM** epic. This workspace is the spec
 1. **PRD is the source of truth.** `docs/tachyone_prd.md` (v1.1.0) defines KPIs (§2), interface (§5), phases (§6) and acceptance (§7). Never contradict it — propose a PRD change instead.
 2. **The wire is frozen.** `/v1/systemone` and `tests/test_contract_wire.py` must never be modified by this epic (ADR-0001, PRD §1.4).
 3. **No invented numbers.** Anything unmeasured is written as **"to be measured (Phase 0/5)"**. Baselines, metrics and VRAM figures come only from harness runs under the §2 protocol.
-4. **ADRs belong upstream.** ADR-0017 (training/export stack) is *planned*, to be authored in `munod/tachyone` — this workspace only tracks its status (`docs/decisions/training-export-stack.md`).
+4. **Upstream is read-only (`WS-AD-010` / DEC-005).** Nothing is ever pushed to `munod/tachyone`; architecture decisions live **here** as `DEC-NNN` records (e.g. `docs/decisions/training-export-stack.md`). PRD v2.0.0 dropped the upstream ADR-0017 requirement.
 
 ## 2. Language policy (DEC-004)
 
@@ -66,7 +66,7 @@ SPECIFY (.specs/features/*/spec.md) → DESIGN (design.md, Large/Complex only) �
 ## 6. Phase-specific rules
 
 - **Phase 0 fixes the numbers:** accuracy targets in PRD §2 may only change from "a medir (Fase 0)" through measured runs (with GPU declared) and maintainer review.
-- **Phase 2 needs ADR-0017 first** — no training code before the ADR exists (PRD §6).
+- **Phase 2 needs DEC-002 first** — no training code before the stack decision is recorded (PRD §6, v2.0).
 - **Eval sets are frozen:** `eval_en`, `eval_multi`, `eval_en_domains`, `eval_multi_domains` and public probes never appear in training prompts or the temperature-fit validation split (PRD §3.3).
 - **Experiment discipline:** pinned seed (AD-009), config verification (L-011), control before variance claims (L-006), worst domain/language gating, never a routed harness (L-013) (PRD §3.2).
 

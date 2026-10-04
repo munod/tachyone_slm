@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **Language note:** entries are written in **English** (PRD §6 gate: docs/PRs in English). The product source of truth, `docs/tachyone_prd.md` (**PRD v1.2.0**), is versioned separately in its own header and remains in **Portuguese** — it is referenced here, never overwritten (decision DEC-004).
 
+## [0.5.0] - 2026-10-04
+
+**PRD re-scoped to v2.0.0** — the owner clarified the product: `munod/tachyone_slm` is **only the SLM** (trained to be an *LLM-backend option* of Tachyone); **nothing upstream changes**, ever.
+
+### Added
+
+- **`docs/decisions/product-scope.md` (DEC-005)** — the re-scope record: product = SLM + serving shim **in this repo**; `munod/tachyone` = read-only dependency **permanently** (`WS-AD-010`); integration = configuration (`TACHYONE_BACKEND=llm` + `TACHYONE_LLM_BASE_URL`/`MODEL`); the §3.4 scoring runs **inside our shim**, which assembles `answers` from logits (so `JSON ok` holds by construction and confidence is never generated text).
+
+### Changed
+
+- **PRD v1.2.0 → v2.0.0** (diff reviewed before commit):
+  - header: product repo = `munod/tachyone_slm`; upstream marked read-only reference;
+  - **§1.1** product scope paragraph + **§1.2** diagram relabelled (`system_two()` = upstream stub; SLM = configured `llm` backend);
+  - **§1.4** new non-goal: *nothing* is modified in `munod/tachyone` (protects JevBench #182 too);
+  - **§3.4** "where it runs" (inside the shim) · **§5.2 rewritten** (config activation; SDK/CLI/cookbook-of-them **removed from scope**) · **§5.4** schema annexed to DEC-002, contract test read-only;
+  - **§6** Fase 2 → DEC-002 local + training code here; Fase 4 → serving shim + own cookbook; Fase 5 → harness imported read-only + HF publication;
+  - **§7.6** "ADR-0017 publicado" → "stack decision recorded (DEC-002, local)" · **§10** product links + read-only note · KPI table header → "Meta (v2.0)".
+- **Specs amended:** `system-two-integration` (→ serving shim, incl. `design.md`), `slm-lora-sft`, `slm-export-quant`, `slm-benchmark-docs` — all now gated by **DEC-002** instead of an upstream ADR; version references bumped to v2.0.0.
+- **Memory:** `WS-AD-010` created (upstream read-only forever); `WS-AD-004` marked **superseded**; `WS-B-002` rewritten (record DEC-002 locally); `WS-B-022` keeps its pause trigger while its read-only half becomes permanent; ROADMAP/PLAN/README/HANDOFF/CONTRIBUTING/PROJECT aligned.
+- **DEC-002** rewritten as the local record; **DEC index + `mkdocs.yml` nav** gained DEC-005.
+- `docs/jevbench-noninterference.md` matrix annotated (ADR-0017 row → dropped).
+
 ## [0.4.0] - 2026-10-04
 
 **⏸️ Project paused** — awaiting the public JevBench evaluation of the submitted System-1 checkpoint.

@@ -1,7 +1,7 @@
 # Tachyone-SLM-Mixture-v1 — dataset card & provenance
 
 > **Phase 1** of the TachyOne SLM epic · spec `.specs/features/slm-mixture-data/spec.md`
-> (DAT-01…DAT-08, repository root — intentionally outside this doc site) · PRD **v1.2.0**
+> (DAT-01…DAT-08, repository root — intentionally outside this doc site) · PRD **v2.0.0**
 > §3.3/§3.4 · built **2026-10-03/04** on the workspace machine (RTX 3060 box; generation is
 > CPU-only).
 

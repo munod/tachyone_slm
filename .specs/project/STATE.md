@@ -1,7 +1,7 @@
 # State
 
 **Last Updated:** 2026-10-04
-**Current Work:** ⏸️ **PROJECT PAUSED** — awaiting **JevBench `fstandhartinger/jevbench#182` evaluation + board publication** (trigger defined 2026-10-04). Freeze: no pushes to `munod/tachyone`, no issue edits (see `docs/jevbench-noninterference.md`). On resume: reload `.specs/HANDOFF.md` → re-run the reachability audit → ADR-0017 (with go-ahead) → Phase 2.
+**Current Work:** **PRD re-scoped to v2.0.0** (2026-10-04) — product = SLM + serving shim **in this repo**, activated by config; `munod/tachyone` = **read-only dependency forever** (`WS-AD-010`). Project otherwise ⏸️ **PAUSED** awaiting JevBench #182 closed + board published (`WS-B-022`). On resume: reload `.specs/HANDOFF.md` → re-run reachability audit → record **DEC-002** → Phase 2.
 
 > **ID convention:** decisions/blockers/lessons created **in this workspace** use the `WS-` prefix (`WS-AD-NNN`, `WS-B-NNN`, `WS-L-NNN`) so they never collide with the canonical `AD-009`, `B-5…B-13`, `L-005…L-016` IDs owned by the upstream repository `munod/tachyone` (see PRD §10). Upstream IDs are **referenced, not duplicated**.
 
@@ -34,6 +34,7 @@
 ### WS-AD-004: ADR-0017 (training/export stack) is PENDING — planned, not drafted here (2026-10-03)
 
 **Decision:** The stack decision (LoRA training stack; vLLM vs TensorRT-LLM export; extras `serve`/`train`/`fast`) is **not** decided in this workspace. ADR-0017 will be published in `munod/tachyone` during Phases 2–3 (PRD §4.1, §6). This workspace only records its *planned* status and decision criteria.
+**Status:** **SUPERSEDED by `WS-AD-010` (2026-10-04, PRD v2.0.0)** — no upstream ADR will be written; the decision is recorded locally as **DEC-002** (PRD §6 Fase 2, §7.6).
 **Reason:** task scope forbids writing an ADR as if it were upstream; and PRD §6 says "ADR-0017 antes de codar".
 **Trade-off:** Phase 2 cannot start until it exists (tracked as blocker WS-B-002).
 **Impact:** `.specs/features/slm-lora-sft` and `slm-export-quant` have a hard prerequisite.
@@ -77,6 +78,14 @@
 **Impact:** `training/configs/data_sft_slm.json`, `slm_pipeline/prepare_sft.py`, dataset card §2; Phase 2 must train from the clean/split files only, never from `*.raw.jsonl`.
 **Recorded in:** `docs/slm-mixture-v1.md` §2.
 
+### WS-AD-010: `munod/tachyone` is a READ-ONLY dependency — permanently (2026-10-04)
+
+**Decision:** No file in `munod/tachyone` is ever written, patched or PR'd by this project — not code, not docs, not ADRs, not releases. Everything the product needs is consumed as a **library/reference**: the frozen wire contract, `training/generate_data.py`, `benchmarks/compare.py` (imported for measurement), `tachyone.handoff`. The SLM ships as **this repo's** product (weights + serving shim + docs) and is selected by configuration (`TACHYONE_BACKEND=llm` + `TACHYONE_LLM_BASE_URL`/`MODEL`).
+**Reason:** clarified by the owner on 2026-10-04 (PRD re-scoped to **v2.0.0**): `tachyone_slm` exists precisely so upstream stays untouched; it also permanently protects the JevBench submission (#182) — which clones `main` without a checkout.
+**Trade-off:** no upstream SDK/CLI export and no bundled cookbook there (PRD §5.2/§7.6 amended); our cookbook and benchmark rows live here; upstream doc links keep pointing at their stub.
+**Impact:** every phase (2–5) executes in this repo; PRD §6/§7, specs `slm-lora-sft`/`system-two-integration`/`slm-benchmark-docs` amended; `WS-B-022` becomes a policy rather than a temporary pause.
+**Recorded in:** PRD v2.0.0 §1.1/§1.4/§5.2/§10 · `docs/jevbench-noninterference.md`.
+
 ---
 
 ## Active Blockers
@@ -91,15 +100,15 @@
 **Discovered:** 2026-10-03
 **Impact:** training code must not be written before the stack ADR exists (PRD §6 Fase 2: "ADR-0017 antes de codar").
 **Workaround:** none (intentional gate).
-**Resolution:** draft → review → publish ADR-0017 in `munod/tachyone` at the start of Phase 2 (decision criteria in DEC-002).
-**Status:** **PAUSED 2026-10-04** — publishing it is a push to `munod/tachyone`, which is frozen until #182 closes (WS-B-022).
+**Resolution:** ~~publish ADR-0017 in `munod/tachyone`~~ → **record the decision as DEC-002 in this repo** (scope changed by PRD v2.0.0; decision criteria already in DEC-002).
+**Status:** scope changed 2026-10-04 — no upstream artifact ever; the item now only waits for the freeze (WS-B-022) to lift before Phase 2 starts.
 
 ### WS-B-022: 🔴 FREEZE — JevBench #182 evaluation pending (2026-10-04)
 
 **Discovered:** 2026-10-04 (audit `docs/jevbench-noninterference.md`, 7/7 pass)
 **Impact:** `munod/tachyone` is untouchable — no pushes (code/docs/ADR/release), no HF revision changes on `tachyone-en`, no edits to issue #182. Reason: the issue's inference snippet clones `main` **without a checkout** (the body does declare pin `538ac68`, but a literal re-run would follow `main`), and the maintainer is running *"reachability checks"*.
 **Workaround:** all work continues in **this** repo (`munod/tachyone_slm`) — disjoint from the evaluation surface (matrix §3).
-**Resolution:** **#182 closed + board published** → re-run the audit (§2 of the report) → resume with ADR-0017 (explicit go-ahead) → Phase 2.
+**Resolution:** **#182 closed + board published** → re-run the audit (§2 of the report) → record **DEC-002** → Phase 2. (The "no upstream writes" half is now **permanent policy**, WS-AD-010.)
 **Owner decisions (2026-10-04):** upstream untouched · this repo may receive pushes · trigger = closed + published · issue stays untouched.
 
 ---
@@ -164,8 +173,8 @@
 - [ ] On resume: **re-run the reachability audit** before anything else (pins may have moved)
 - [x] Run Phase 0 baselines and fix numeric accuracy targets in PRD §2 — **done 2026-10-03** (PRD v1.2.0)
 - [x] Build `Tachyone-SLM-Mixture-v1` (config, dedup, split, render, audit, provenance) — **done 2026-10-04** (DAT-01…08)
-- [ ] **Appro PRD v1.2.0** (maintainer) — closes Phase 0
-- [ ] Publish ADR-0017 (training/export stack) + schema annex (PRD §5.4) in `munod/tachyone` — **gates Phase 2 — FROZEN by WS-B-022**
+- [ ] **Approve PRD v2.0.0** (maintainer) — re-scoped document (v1.2.0 → v2.0.0)
+- [ ] Record **DEC-002** (training/export stack) + schema annex (PRD §5.4) **in this repo** — gates Phase 2 (upstream ADR dropped by PRD v2.0.0)
 - [x] Publish `Tachyone-SLM-Mixture-v1` to HF — **done 2026-10-04** (`datasets/munod/tachyone_slm_mixture_v1`; model repo `munod/tachyone_slm` reserved for weights)
 - [ ] Fill `docs/model-card.md` placeholders in Phase 5
 - [ ] Add the SLM engine row to `benchmarks/compare.py` (Phase 5)

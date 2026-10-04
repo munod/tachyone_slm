@@ -51,8 +51,8 @@ Surfaces of the evaluation × everything this workspace has done or plans.
 | HF dataset `tachyone_slm_mixture_v1` | — | — | — | — | — | **SAFE** — new id |
 | HF model repo `tachyone_slm` (empty) | — | — | — | — | — | **SAFE** — new id, reserved for future weights |
 | This workspace's GitHub pushes | — | — | — | — | — | **SAFE** — separate repo |
-| **ADR-0017 published upstream** | — | docs-only, but a `main` push | — | risk if files touched | — | **CONDICIONAL → frozen** |
-| **Phase 2 LoRA training** | — | code/deps could change `main` | — | — | — | **FROZEN** (also gated by ADR-0017) |
+| **ADR-0017 published upstream** | — | docs-only, but a `main` push | — | risk if files touched | — | ~~CONDICIONAL~~ → **dropped by PRD v2.0.0** (WS-AD-010) |
+| **Phase 2 LoRA training** | — | code/deps could change `main` | — | — | — | **FROZEN** (gated by DEC-002; runs in *this* repo since PRD v2.0) |
 | **Phase 3 export + new release** | never re-tag/move `1c88ebef` | release changes what `git clone` resolves | — | — | — | **FROZEN** |
 | Editing the issue body/comments | — | — | — | — | reachability noise | **PROHIBITED** (your decision) |
 
@@ -80,5 +80,5 @@ vector entirely.
 1. Reload `.specs/HANDOFF.md` and `.specs/project/STATE.md`.
 2. **Re-run this audit** — pins may have moved while frozen (step 1–4 of §2).
 3. Confirm upstream HEAD and licence lock still serve the submitted content.
-4. Only then: draft ADR-0017 (explicit go-ahead required) → Phase 2.
+4. Only then: record DEC-002 (stack decision) here → Phase 2. *(Note: PRD v2.0.0 made upstream read-only permanent — WS-AD-010 — so item 1 of §4 is no longer a pause but policy.)*
 5. If resuming *before* #182 closes, revisit §3 with measurements and decide explicitly.

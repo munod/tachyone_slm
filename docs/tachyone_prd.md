@@ -2,15 +2,29 @@
 
 **Projeto:** Tachyone SLM — *Beyond the Speed of Light*
 
-**Versão:** 1.2.0
+**Versão:** 2.0.0
 
-**Data:** 03 de Outubro de 2026
+**Data:** 04 de Outubro de 2026
 
-**Status:** Pronto para aprovação *(Fase 0 concluída em 03/10/2026: alvos numéricos do slice abstido fixados na §2 — evidência em `docs/phase0-baseline.md`)*
+**Status:** Pronto para aprovação *(v2.0.0: escopo clarificado — produto = SLM + shim de serving neste repo; Fase 0 concluída em 03/10 e Fase 1 em 04/10)*
 
-**Repositório de destino do código:** [`munod/tachyone`](https://github.com/munod/tachyone) @ `164ed3bf` (main, out/2026)
+**Repositório do produto (código, dados, docs):** [`munod/tachyone_slm`](https://github.com/munod/tachyone_slm) @ `f6a4218` (main, out/2026)
+
+**Repositório de referência (somente leitura — `WS-AD-010`):** [`munod/tachyone`](https://github.com/munod/tachyone) @ `164ed3bf` — fornecedor do **contrato** (`/v1/systemone`), do **pipeline de dados** (`training/generate_data.py`), do **harness** (`benchmarks/compare.py`) e do **handoff** (`tachyone.handoff`). **Nenhuma mudança é feita lá.**
 
 **Core Motto:** *"Além da velocidade da luz!"*
+
+---
+
+**Changelog da versão (v1.2 → v2.0) — escopo clarificado:**
+
+* **Produto = SLM + shim de serving, neste repositório.** O SLM é treinado para ser **uma opção de backend `llm` do tachyone**: ativado por configuração (`TACHYONE_BACKEND=llm` + `TACHYONE_LLM_BASE_URL`/`TACHYONE_LLM_MODEL`), sem nenhuma linha no upstream — §1.1, §5.2.
+* **`munod/tachyone` vira dependência somente-leitura permanente (`WS-AD-010`).** É referência de contrato, estrutura de dados e régua de avaliação — nunca alvo de escrita. Isso também mantém a submissão JevBench `#182` intocada (`WS-B-022`) — §1.4, §10.
+* **§5.2 reescrito:** as superfícies "export no SDK `tachyone.system_two`", "flag no CLI" e "cookbook do upstream migrado" **saem de escopo** — entregamos nossa própria cookbook/examples aqui.
+* **§6 Fase 4 reescrita:** integração vira **shim de serving** (nosso servidor expõe API OpenAI-compatível e **monta o `answers` a partir dos logits** — scoring do §3.4 acontece dentro dele) + calibração + política τ/retry/fallback.
+* **§6 Fase 5 reescrita:** avaliação roda com o harness **importado em modo leitura** (como na Fase 0); publicação = pesos + model card no HF.
+* **§7.6:** "ADR-0017 publicado" substituído por **"decisão de stack registrada (`DEC-002`, local)"** — sem ADR no upstream porque não há código lá.
+* **§3.4 mantido e localizado:** a regra de ouro continua (*probabilidade vem dos logits, nunca de texto gerado*), agora explicitada como responsabilidade **do shim**.
 
 ---
 
@@ -46,6 +60,8 @@ O SLM substitui os candidatos atuais a System-2 medidos no repositório — LLMs
 
 O System-1 (encoder ModernBERT/mmBERT + LoRA) **permanece intocado**; o wire `/v1/systemone` **não muda** (ADR-0001).
 
+**Escopo do produto (v2.0).** O entregável é o **SLM treinado + o shim de serving**, tudo neste repositório (`munod/tachyone_slm`): pesos publicados no HF (`munod/tachyone_slm`), servidor que expõe **API OpenAI-compatível** e **monta o `answers` a partir dos logits** (o scoring do §3.4 acontece *dentro* dele — o modelo nunca escreve os números), e os docs/model card. O SLM é **selecionado por configuração** no backend `llm` já existente do tachyone — nenhuma linha é escrita no upstream, que é **dependência somente-leitura** (§1.4, decisão `WS-AD-010`).
+
 ### 1.2 Papel no híbrido System-1 / System-2
 
 ```
@@ -56,7 +72,8 @@ request ──► System-1 (encoder, ~3,8–6,8 ms p50)
            │            │
      confiança ≥ τ   confiança < τ (abstém)
            │            │
-        resposta     system_two()  ◄── NOVO: implementação oficial (§5.2)
+        resposta     system_two()  ◄── stub do usuário lá; aqui: SLM setado
+                                   como backend llm por config (§5.2)
                         │
                         ▼
                    SLM local (este PRD) ──► resposta wire válida
@@ -69,11 +86,12 @@ request ──► System-1 (encoder, ~3,8–6,8 ms p50)
 
 1. **O System-1 não raciocina.** No JevBench público, o encoder está em **Intelligence 15,0** (alvo ≥ 50) e no **nível de chance no hard tier**; duas causas estruturais registradas: o `noul` ignora o rubric (`cos(question, state)` apenas → adequacy no chance) e a inferência trunca em 512 tokens enquanto os estados hard médios têm **1.079 tokens** (máx. 3.746) — BACKLOG B-13/P0. A lição **L-014** mostra que mais contexto não salva o *encoder* de similaridade — mas ler o texto inteiro com um modelo autoregressivo é exatamente a hipótese que este SLM testa (Fase 0/4).
 2. **Os candidatos a System-2 são bons em qualidade e ruins em velocidade.** `ornith-9b` responde com acurácia **0,611/0,771** nos dois sets de `docs/compare.md` — mas a **3,3–6,8 s p50**, com `ling-tiny` ainda falhando o contrato (`JSON ok` **0,889/0,917** pós-B-10) e ambos usando **4,8–5,5 GB de VRAM**. Um SLM de 0,5B ataca os três defeitos ao mesmo tempo.
-3. **O slot System-2 existe e está vazio.** O `cookbook-handoff.md` descreve `system_two()` como stub do usuário ("a frontier LLM, a human reviewer, or a longer pipeline"). Este PRD é a especificação da **implementação oficial** desse slot.
+3. **O slot System-2 existe e está vazio.** O `cookbook-handoff.md` descreve `system_two()` como stub do usuário ("a frontier LLM, a human reviewer, or a longer pipeline"). Este PRD especifica o **SLM que ocupa esse slot** — servido como opção de backend `llm` por configuração (§5.2).
 4. **Por que a confiança não pode ser texto gerado.** `docs/compare.md` §1 registra a crítica central contra LLMs: *"a confidence that was never fitted to anything"*. O SLM herda `calibration.py` (temperature scaling por (primitivo, idioma)) — §3.5.
 
 ### 1.4 Não-escopo
 
+* **Não** modifica **nada** em `munod/tachyone` — o upstream é **dependência somente-leitura permanente** (contrato, pipeline de dados, harness e handoff são referência, nunca alvo de escrita) — decisão `WS-AD-010`. Isso mantém preservada, de quebra, a submissão JevBench `#182` (`WS-B-022`).
 * **Não** muda o wire `/v1/systemone` (ADR-0001; `tests/test_contract_wire.py` permanece verde sem alteração).
 * **Não** substitui nem modifica o backend encoder (System-1).
 * **Não** submete o JevBench com o SLM (a submissão segue sendo o artefato do encoder; composição System-1+2 é futuro).
@@ -86,7 +104,7 @@ request ──► System-1 (encoder, ~3,8–6,8 ms p50)
 
 Todas as medições seguem o protocolo do `benchmarks/compare.py`: **sequencial, batch=1, warm-up excluído, mesma linha de dados, mesma implementação de métrica, GPU declarada ao lado do número**.
 
-| Métrica | Meta (v1.1) | Baseline System-2 medido (fonte) |
+| Métrica | Meta (v2.0) | Baseline System-2 medido (fonte) |
 | --- | --- | --- |
 | **Latência p50 in-engine** | **< 20 ms** (stretch: < 8 ms — pré-condições em §4) | 3.315–6.844 ms (`ornith-9b`) · 1.219–1.662 ms (`ling-tiny`) — `docs/compare.md` §3 · SLM base **276 ms** (llama-server) / 554 ms (Ollama) **sem SFT** — Fase 0 |
 | **Latência p95 in-engine** | **< 50 ms** | 8,6–50,3 s (dominado por falhas de contrato) · SLM base 1,2 s sem SFT — Fase 0 |
@@ -147,6 +165,8 @@ Gerado pelo **pipeline existente** (`training/generate_data.py`) — não um dat
 
 **Por quê:** compliance por construção (não existe texto livre fora do schema), distribuições nativas (invariante do wire), custo estável mesmo com as **255 options** permitidas pelo contrato — B-10 mediu **46 s por tentativa de 52 options** em geração livre — e coerência com a identidade "single forward pass" do projeto (mesma classe de solução do peer `pngwn/system-one-qwen3.5-4b-scorer`).
 
+**Onde roda (v2.0):** o scoring acontece **dentro do shim de serving** (§5.2) — exposto como API OpenAI-compatível. O cliente upstream (`TACHYONE_BACKEND=llm`) faz `chat/completions`, o shim pontua os rótulos nos logits e **devolve o objeto `answers` montado pelo runtime**; o upstream apenas parseia esse JSON. Nenhuma linha muda em `munod/tachyone`.
+
 **Alternativa documentada (modo experimental, Fase 4):** *geração com constrained decoding* dos **valores** do wrapper `answers` (≈ 4–8 tokens/registro; o runtime monta o JSON final). Único modo que pode emitir raciocínio interno (scratchpad anterior ao wrapper, descartado pelo runtime) — candidato natural para o slice hard. Riscos: compliance depende da grammar, `probabilities` exigem rescoring posterior, degrada com muitas opções.
 
 **Regra de ouro:** `confidence`/`probabilities` **nunca são texto gerado pelo modelo** — vêm dos logits e do fit de §3.5.
@@ -161,7 +181,7 @@ Gerado pelo **pipeline existente** (`training/generate_data.py`) — não um dat
 
 ## 4. Otimização de Performance: *"Beyond Light Speed"*
 
-1. **Fusão e exportação:** merge dos pesos LoRA no trunk → export para **vLLM** (FP8) ou **TensorRT-LLM**. Decisão de stack registrada no ADR-0017.
+1. **Fusão e exportação:** merge dos pesos LoRA no trunk → export para **vLLM** (FP8) ou **TensorRT-LLM**. Decisão de stack registrada em `DEC-002` (**neste** repositório).
 2. **Matriz de hardware (correção da v1.0):**
 
    | Papel | GPU | Precisão |
@@ -220,11 +240,12 @@ O prompt de texto livre e o JSON próprios da v1.0 **foram removidos** — viola
 
 Invariantes obrigatórias: wrapper `answers` presente; `probabilities` com as chaves exatas das opções/índices somando 1,0; `noul` float 0..1; `legend` espelhando o `criteria` do score; `answers` ↔ `questions` na mesma chave.
 
-### 5.2 Integração: implementação oficial de `system_two()`
+### 5.2 Integração: SLM como opção de backend `llm` — configuração, não código
 
-* **Ponto de plug-in:** composição **client-side e additive** (padrão B-3) — o SLM é invocado por `system_two(state, questions, context)` no SDK/CLI, consumindo o `HandoffReport` de `tachyone.handoff`. **Nenhum campo novo no `/v1/systemone`.**
-* Superfície: export no SDK (`tachyone.system_two`), flag correspondente no CLI, exemplo do `docs/cookbook-handoff.md` migrado do stub para a implementação real.
-* Modo de execução: motor local embarcado (transformers/peft) com servidores externos (vLLM/TRT-LLM) como opcional — medir ambos na Fase 5.
+* **Ativação = configuração:** o shim expõe API **OpenAI-compatível** e é selecionado pelas env vars que o upstream **já** entende: `TACHYONE_BACKEND=llm`, `TACHYONE_LLM_BASE_URL=<shim>`, `TACHYONE_LLM_MODEL=tachyone-slm`. **Zero código novo em `munod/tachyone`** (`WS-AD-010`).
+* **Shim = onde o §3.4 vive:** recebe o `chat/completions`, executa o *scoring* nos logits e devolve o objeto `answers` **montado pelo runtime** — o modelo nunca escreve números, então `JSON ok` é **por construção** e a regra de ouro (§3.4) vale. O payload é validado contra `tachyone.wire` (importado em modo leitura).
+* **Plug-in client-side (opcional):** quem quiser compor sem HTTP usa nosso `system_two()` como **biblioteca**, consumindo o `HandoffReport` de `tachyone.handoff`. A cookbook é **a nossa** — a do upstream permanece como stub, sem export no SDK/CLI deles (superfícies que a v1.2 prometia e a v2.0 **remove do escopo**).
+* **Modo de execução:** motor local embarcado (transformers/peft) atrás do shim; servidores externos (vLLM/TRT-LLM) como opcional — medir ambos na Fase 5.
 
 ### 5.3 Política de τ, retry e cadeia de fallback
 
@@ -235,7 +256,7 @@ Invariantes obrigatórias: wrapper `answers` presente; `probabilities` com as ch
 ### 5.4 Constrained decoding / schema
 
 * A grammar/JSON Schema **do contrato** é a fonte do constrained decoding (XGrammar/llguidance ou `guided_json` do vLLM) no modo experimental de geração; no modo padrão (§3.4) a validade é por construção e o schema atua como verificação final.
-* Schema publicado como anexo do ADR-0017 e testado contra `tests/test_contract_wire.py`.
+* Schema publicado **neste repositório** (anexo de `DEC-002`) e validado contra o contrato do upstream — `tests/test_contract_wire.py` é executado em modo leitura, **nunca editado**.
 
 ---
 
@@ -248,10 +269,10 @@ Invariantes obrigatórias: wrapper `answers` presente; `probabilities` com as ch
 
 * **Fase 0 — Baseline do slice abstido (1 dia) — ✅ CONCLUÍDA (2026-10-03):** System-1 + candidatos LLM medidos no slice `confidence < τ=0,6` dos eval sets; **alvos da §2 fixados**; A/B de contexto decidido (2.048). Saída: `docs/phase0-baseline.md` + artefatos `benchmarks/results/phase0_*.json`.
 * **Fase 1 — Mixture SFT (1–2 dias):** config `data_sft_slm.json`, ~50k registros, golden-hash, auditoria de contaminação, renderizador prompt/alvo do §3.4.
-* **Fase 2 — Treino LoRA/SLM (2 dias):** **ADR-0017 antes de codar**; stack recomendada: `training/finetune_rlcd.py` + peft do próprio repo (Unsloth só como extra novo, justificado no ADR); execução com a disciplina da §3.2 (~4–12 h de GPU estimados).
+* **Fase 2 — Treino LoRA/SLM (2 dias):** **decisão de stack registrada em `DEC-002` antes de codar**; os scripts de treino vivem **neste repo**, usando o pipeline upstream (`training/finetune_rlcd.py`, peft) como **referência em modo leitura**; execução com a disciplina da §3.2 (~4–12 h de GPU estimados).
 * **Fase 3 — Export e quantização (1 dia):** merge LoRA; export vLLM/TRT-LLM; INT4 para 3060, FP8 para L4; VRAM medida.
-* **Fase 4 — Integração (1–2 dias):** `system_two()` no SDK/CLI, modo de decodificação, fit de calibração, política τ/retry/fallback; **contract suite permanece intocado**.
-* **Fase 5 — Benchmark e publicação (1–2 dias):** engine row nova no `benchmarks/compare.py` (as 4 rows existentes são a régua); docs em **inglês**: ADR-0017, `docs/cookbook-handoff.md`, `README`, `docs/model-card.md`, `CHANGELOG.md`, `benchmarks/report.md`.
+* **Fase 4 — Integração (1–2 dias):** **shim de serving** (API OpenAI-compatível que executa o scoring do §3.4 e monta o `answers`), modo de decodificação, fit de calibração, política τ/retry/fallback + **cookbook própria**; **contract suite do upstream intocada** (executada em modo leitura).
+* **Fase 5 — Benchmark e publicação (1–2 dias):** harness **importado em modo leitura** (`benchmarks/compare.py` — as 4 rows existentes são a régua; a row do SLM entra no **nosso** relatório); publicação de **pesos + model card no HF**; docs em **inglês** neste repo: `README`, `docs/model-card.md`, `CHANGELOG.md`, cookbook própria, relatório de benchmark local.
 * **Gates do repositório (todo dia):** `ruff check` · `ruff format --check` · `pyright` · `pytest` · `mkdocs build --strict` · conventional commits · docs/PRs em inglês (`AGENTS.md`/`CONTRIBUTING.md`).
 
 ---
@@ -263,7 +284,7 @@ Invariantes obrigatórias: wrapper `answers` presente; `probabilities` com as ch
 3. **Latência:** p50 **< 20 ms** e p95 **< 50 ms** in-engine com GPU e método declarados; **≥ 50×** o p50 de `ornith-9b`; **< 8 ms** registrado como *stretch* apenas com as pré-condições da §4 (FP8@L4 + modo de saída mínula).
 4. **Calibração:** ECE (10-bin, fitted por primitivo×idioma) **≤ 0,030**, com **Brier e `Conf` publicados ao lado**.
 5. **Recursos:** VRAM adicional ≤ **1,6 GB** (bf16) / ≤ **1,0 GB** (INT4/FP8), medida no harness; throughput ≥ **20 itens/s**.
-6. **Processo:** ADR-0017 publicado; gates do `AGENTS.md` verdes; superfícies documentadas (`CHANGELOG`, `cookbook-handoff`, `model-card`, `benchmarks/report.md`) atualizadas **como um conjunto** (padrão AD-009).
+6. **Processo:** **decisão de stack registrada (`DEC-002`, local — sem ADR no upstream, `WS-AD-010`)**; gates verdes (`ruff check` · `ruff format --check` · `pyright` · `pytest` · `mkdocs build --strict`); superfícies documentadas (`CHANGELOG`, cookbook própria, `model-card`, relatório de benchmark) atualizadas **como um conjunto** (padrão AD-009).
 
 ---
 
@@ -276,7 +297,7 @@ Invariantes obrigatórias: wrapper `answers` presente; `probabilities` com as ch
 | Slice τ=0,6 minúsculo nos eval sets de inglês (n=1 e n=4) — denominador insuficiente para alvo | Fase 0: confiança média do System-1 0,99–0,994; só `eval_multi_domains` tem n=264 | alvo ancorado em `eval_multi_domains`; alternativas registradas (τ maior — sweep 0,3–0,95 no relatório —, eval sets mais difíceis) |
 | Contaminação de eval via mixture sintética | L-005 (in-sample synthetic) + regra de eval congelado | auditoria de overlap na Fase 1; probes públicos (B-7) como checagem externa |
 | Stretch < 8 ms inatingível | roofline: decode é bandwidth-bound; JSON completo ≈ 60 tok | meta dura é < 20 ms; stretch condicionado a FP8@L4 + saída mínula, medido — não prometido |
-| Novas dependências de serving (vLLM/TRT-LLM) vs stack `uv` do repo | extras `serve`/`train`/`fast` já existem como precedente | decisão registrada no ADR-0017; extras opt-in |
+| Novas dependências de serving (vLLM/TRT-LLM) vs stack `uv` do repo | extras `serve`/`train`/`fast` já existem como precedente | decisão registrada em `DEC-002` (local); extras opt-in |
 | GPU Ada indisponível para o stretch | L4 é a box de treino atual | caminho principal (3060/INT4) não depende de Ada |
 | Regressão em inglês por fine-tuning | histórico de retreinos B-11/B-12 | early stopping em `eval_en`; System-1 nunca é re-treinado aqui |
 
@@ -295,7 +316,10 @@ Invariantes obrigatórias: wrapper `answers` presente; `probabilities` com as ch
 
 ---
 
-## 10. Referências (repositório `munod/tachyone`)
+## 10. Referências — produto aqui, upstream só como leitura
+
+* **Produto (este PRD):** [`munod/tachyone_slm`](https://github.com/munod/tachyone_slm) (repo) · HF de pesos [`munod/tachyone_slm`](https://huggingface.co/munod/tachyone_slm) · dataset [`munod/tachyone_slm_mixture_v1`](https://huggingface.co/datasets/munod/tachyone_slm_mixture_v1)
+* **Referências abaixo (repositório `munod/tachyone`, somente leitura — `WS-AD-010`):**
 
 * Contrato: `docs/protocol.md` · `docs/adr/ADR-0001-jev-drop-in-protocol.md`
 * Handoff System-2: `src/tachyone/handoff.py` · `docs/cookbook-handoff.md` (B-3)

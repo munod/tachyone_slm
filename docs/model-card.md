@@ -2,7 +2,7 @@
 
 > **Status:** 🟡 **TEMPLATE — to be completed in Phase 5** (PRD §6, §7.6).
 > Fields marked `TODO(Phase 5)` must be filled with measured values; fields formerly marked **to be measured (Phase 0)** were filled from the Phase 0 run of 2026-10-03 (`docs/phase0-baseline.md`).
-> **No metric in this card may be invented** (decision WS-AD-006). Configuration values below are copied from PRD **v1.2.0** §3 — they are *decisions*, not measurements.
+> **No metric in this card may be invented** (decision WS-AD-006). Configuration values below are copied from PRD **v2.0.0** §3 — they are *decisions*, not measurements.
 
 ---
 
@@ -16,7 +16,7 @@
 | Model version / checkpoint hash | `TODO(Phase 5)` |
 | Date released (first version) | `TODO(Phase 5)` |
 | Model type | Decoder-only SLM, SFT via LoRA (merged for export) |
-| Frameworks | `transformers` + `peft` (embedded engine); export via vLLM or TensorRT-LLM — **per ADR-0017 (pending)** |
+| Frameworks | `transformers` + `peft` (embedded engine); export via vLLM or TensorRT-LLM — **per DEC-002 (pending, local)** |
 | Quantization | bf16 (reference) · INT4 via AWQ/GPTQ @ RTX 3060 · FP8 @ NVIDIA L4 — `TODO(Phase 5: measured VRAM)` |
 | License | `TODO(Phase 5)` — must inherit/track base-model license terms |
 | Repository | code: [`munod/tachyone`](https://github.com/munod/tachyone) · specs: this workspace `.specs/` |
@@ -98,7 +98,7 @@
 | Epochs | 3–5 with early stopping on `eval_en` **+** abstained slice |
 | Seed | Pinned (AD-009); config verified pre-run (L-011) |
 | Gating | Worst domain/language — never the average; never a routed harness (L-013) |
-| Stack | `training/finetune_rlcd.py` + peft recommended; **ADR-0017 pending** |
+| Stack | `training/finetune_rlcd.py` + peft recommended; **DEC-002 pending** (run in this repo) |
 | GPU / duration | RTX 3060 12 GB or L4 23 GB · ~4–12 h estimated (PRD §6) |
 | Actual run manifest | `TODO(Phase 2)` — config hash, seed, per-epoch metrics, control-vs-experiment |
 
@@ -109,7 +109,7 @@
 | Main path | bf16 or INT4 (AWQ/GPTQ) | RTX 3060 (Ampere — **no FP8**) | to be measured (Phase 3) |
 | Stretch path | FP8 | NVIDIA L4 (Ada/SM89) | to be measured (Phase 3) |
 
-Serving: embedded engine (transformers/peft) default; vLLM / TensorRT-LLM optional (**ADR-0017 pending**); prefix caching + warm-up shapes per §4.3–4.4. Embedded vs external comparison: **to be measured (Phase 5)**.
+Serving: **serving shim** (OpenAI-compatible, §3.4 scoring from logits) + embedded engine (transformers/peft) default; vLLM / TensorRT-LLM optional (**DEC-002 pending**); prefix caching + warm-up shapes per §4.3–4.4. Embedded vs external comparison: **to be measured (Phase 5)**.
 
 ## Calibration
 
@@ -124,7 +124,7 @@ Temperature scaling via `training/fit_calibration.py`, **per (primitive, languag
 
 ## Citation & changelog
 
-- Product specification: `docs/tachyone_prd.md` (**PRD v1.2.0** — Phase 0 targets fixed).
+- Product specification: `docs/tachyone_prd.md` (**PRD v2.0.0** — scope: SLM + serving shim; Phase 0 targets fixed).
 - Phase 0 baseline report: `docs/phase0-baseline.md` (2026-10-03).
 - Training data: `docs/slm-mixture-v1.md` (dataset card, 2026-10-04).
-- This card: `TODO(Phase 5)` — must be updated together with `benchmarks/report.md`, `CHANGELOG.md`, README and ADR-0017 (AD-009 "as a set" rule).
+- This card: `TODO(Phase 5)` — must be updated together with the local benchmark report, `CHANGELOG.md`, README and DEC-002 (AD-009 "as a set" rule); weights published to HF `munod/tachyone_slm`.
