@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **Language note:** entries are written in **English** (PRD §6 gate: docs/PRs in English). The product source of truth, `docs/tachyone_prd.md` (**PRD v1.2.0**), is versioned separately in its own header and remains in **Portuguese** — it is referenced here, never overwritten (decision DEC-004).
 
+## [0.4.0] - 2026-10-04
+
+**⏸️ Project paused** — awaiting the public JevBench evaluation of the submitted System-1 checkpoint.
+
+### Added
+
+- **`docs/jevbench-noninterference.md`** — the audit that justifies the pause (read-only, 7/7 pass):
+  - pins declared by [`fstandhartinger/jevbench#182`](https://github.com/fstandhartinger/jevbench/issues/182) (weights `1c88ebef`, inference commit `538ac68`, harness `bb05a335`, licence lock, calibration assets);
+  - reachability of all 7 URLs (**all 200**), **sha256 of the 5 pinned files matched 5/5** and the method file hash matched exactly;
+  - upstream untouched (`git status` empty, HEAD `164ed3b`), our pushes only in `munod/tachyone_slm`, no identifier collision;
+  - **interference matrix** (everything done/planned × evaluation surfaces) and the single real vector: the issue's snippet clones `main` **without `checkout`**;
+  - do-not-touch list, freeze policy, resume checklist.
+- **`.specs/HANDOFF.md`** — pause handoff per the `tlc-spec-driven` protocol (completed / pending / blockers / context + resume steps).
+
+### Changed
+
+- **Freeze recorded as `WS-B-022`** (P0): no pushes to `munod/tachyone` (code/docs/ADR-0017/releases), no HF revision changes on `tachyone-en`, no edits to #182 — **owner decisions 2026-10-04**; this repo keeps receiving pushes.
+- **Resume trigger:** #182 **closed** + **board published** → re-run the reachability audit → ADR-0017 (explicit go-ahead) → Phase 2.
+- `.specs/project/ROADMAP.md` — header reflects the pause; Milestones 2–5 → **⏸️ PAUSED**; `STATE.md` — current work, blocker `WS-B-022`, todos; `BACKLOG.md` — `WS-B-002` paused, `WS-B-022` opened; `README.md` — ⏸️ status; `docs/plan.md` — pause banner; `mkdocs.yml`/`docs/index.md` — report added to the nav.
+
 ## [0.3.1] - 2026-10-04
 
 ### Changed

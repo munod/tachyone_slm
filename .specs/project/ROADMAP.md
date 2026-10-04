@@ -1,9 +1,10 @@
 # Roadmap
 
-**Current Milestone:** Phase 0 — Baseline System-2
-**Status:** Planning
-**Source of truth:** `docs/tachyone_prd.md` v1.1.0 §6 (phases), §7 (acceptance), §8 (risks)
-**Last Updated:** 2026-10-03
+**Current Milestone:** ⏸️ **none in progress** — Milestones 0–1 complete, 2–5 frozen
+**Status:** **PAUSED (2026-10-04)** — awaiting **JevBench #182 evaluation + board publication** (WS-B-022; evidence in `docs/jevbench-noninterference.md`)
+**Resume trigger:** #182 **closed** + **board published** → re-run reachability audit → ADR-0017 (go-ahead required)
+**Source of truth:** `docs/tachyone_prd.md` **v1.2.0** §6 (phases), §7 (acceptance), §8 (risks)
+**Last Updated:** 2026-10-04
 
 ---
 
@@ -47,7 +48,7 @@
 
 ---
 
-## Milestone 2 — LoRA / SFT Training (Days 4–5)
+## Milestone 2 — LoRA / SFT Training (Days 4–5) — ⏸️ PAUSED (WS-B-022; also gated by ADR-0017)
 
 **Goal:** A fine-tuned adapter beating the Phase 0 slice targets without regressing `eval_en`.
 
@@ -65,7 +66,7 @@
 
 ---
 
-## Milestone 3 — Export & Quantization (Day 6)
+## Milestone 3 — Export & Quantization (Day 6) — ⏸️ PAUSED (WS-B-022)
 
 **Goal:** A deployable artifact fitting the VRAM budget on both target GPUs.
 
@@ -83,7 +84,7 @@
 
 ---
 
-## Milestone 4 — System-2 Integration (Days 7–8)
+## Milestone 4 — System-2 Integration (Days 7–8) — ⏸️ PAUSED (WS-B-022)
 
 **Goal:** The official `system_two()` implementation wired into SDK/CLI with calibration and fallback policy — wire untouched.
 
@@ -102,7 +103,7 @@
 
 ---
 
-## Milestone 5 — Benchmark & Publication (Days 9–10)
+## Milestone 5 — Benchmark & Publication (Days 9–10) — ⏸️ PAUSED (WS-B-022)
 
 **Goal:** All KPIs measured under the repo protocol and the full English doc set published as one unit.
 

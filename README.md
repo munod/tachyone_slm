@@ -2,7 +2,7 @@
 
 > *"Beyond the Speed of Light"* — the official **local System-2** of the TachyOne System-1/System-2 hybrid.
 
-**Status:** 🟢 **Phases 0 and 1 complete** — PRD **v1.2.0** carries fixed numeric targets ([`docs/phase0-baseline.md`](docs/phase0-baseline.md)) and `Tachyone-SLM-Mixture-v1` is built: **50,180 clean SFT pairs**, contamination audit pass, 16 tests green ([`docs/slm-mixture-v1.md`](docs/slm-mixture-v1.md)). **Product code still lives in [`munod/tachyone`](https://github.com/munod/tachyone)** — this repo holds specs, docs and data tooling. Next: **ADR-0017 → Phase 2 training**.
+**Status:** ⏸️ **PAUSED (2026-10-04)** — Phases 0 and 1 are complete (PRD **v1.2.0** with fixed targets · [`docs/phase0-baseline.md`](docs/phase0-baseline.md); `Tachyone-SLM-Mixture-v1` published with 50,180 clean SFT pairs · [`docs/slm-mixture-v1.md`](docs/slm-mixture-v1.md)). **Resume trigger:** JevBench [#182](https://github.com/fstandhartinger/jevbench/issues/182) **closed + board published**. During the freeze nothing is pushed to `munod/tachyone` and the issue is never touched — audit evidence: [`docs/jevbench-noninterference.md`](docs/jevbench-noninterference.md) · handoff: [`.specs/HANDOFF.md`](.specs/HANDOFF.md). **Product code lives in [`munod/tachyone`](https://github.com/munod/tachyone)** (frozen); this repo receives pushes.
 
 ---
 
@@ -25,7 +25,7 @@ TachyOne SLM is a **Qwen2.5-0.5B-Instruct** model fine-tuned with **SFT via LoRA
 - **PRD:** [`docs/tachyone_prd.md`](docs/tachyone_prd.md)
 - **Specs:** [`.specs/README.md`](.specs/README.md) · [project](.specs/project/PROJECT.md) · [roadmap](.specs/project/ROADMAP.md) · [state](.specs/project/STATE.md) · [backlog](.specs/project/BACKLOG.md)
 - **Feature specs (Phases 0–5):** [baseline-system2](.specs/features/baseline-system2/spec.md) · [slm-mixture-data](.specs/features/slm-mixture-data/spec.md) · [slm-lora-sft](.specs/features/slm-lora-sft/spec.md) · [slm-export-quant](.specs/features/slm-export-quant/spec.md) · [system-two-integration](.specs/features/system-two-integration/spec.md) · [slm-benchmark-docs](.specs/features/slm-benchmark-docs/spec.md)
-- **Docs:** [architecture](docs/architecture.md) · [execution plan](docs/plan.md) · [Phase 0 baseline](docs/phase0-baseline.md) · [dataset card (SLM Mixture v1)](docs/slm-mixture-v1.md) · [model card (template)](docs/model-card.md) · [decisions](docs/decisions/README.md)
+- **Docs:** [architecture](docs/architecture.md) · [execution plan](docs/plan.md) · [Phase 0 baseline](docs/phase0-baseline.md) · [dataset card (SLM Mixture v1)](docs/slm-mixture-v1.md) · [JevBench non-interference](docs/jevbench-noninterference.md) · [model card (template)](docs/model-card.md) · [decisions](docs/decisions/README.md)
 - **Dataset (Hugging Face):** [`munod/tachyone_slm_mixture_v1`](https://huggingface.co/datasets/munod/tachyone_slm_mixture_v1) · **Model (future weights):** [`munod/tachyone_slm`](https://huggingface.co/munod/tachyone_slm)
 - **Contributing:** [`CONTRIBUTING.md`](CONTRIBUTING.md) · **Changelog:** [`CHANGELOG.md`](CHANGELOG.md)
 

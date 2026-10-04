@@ -1,7 +1,7 @@
 # Backlog
 
 **Workspace:** `TachyOne_SLM` (specification workspace for the `munod/tachyone` epic)
-**Last Updated:** 2026-10-03 *(after Phase 0)*
+**Last Updated:** 2026-10-04 — ⏸️ **project paused** (WS-B-022, JevBench #182)
 **Source of truth:** `docs/tachyone_prd.md` **v1.2.0**
 
 > **Scope note:** items **owned by this workspace / this epic** are listed here as `WS-B-NNN`. The upstream backlog of `munod/tachyone` (`B-5`, `B-10`, `B-11`, `B-12`, `B-13/P0`, …) lives in that repo's `.specs/project/BACKLOG.md` and is only **referenced** below — not copied, not re-numbered.
@@ -12,7 +12,7 @@
 
 | ID | Item | Priority | Phase | PRD ref | Status |
 | --- | --- | --- | --- | --- | --- |
-| WS-B-002 | **Publish ADR-0017** (training stack + export/serving stack) — planned only; must exist before any training code | P0 | 2 (draft) / 3 (final) | §4.1, §5.4, §6, §7.6 | Open — blocks Phase 2 |
+| WS-B-002 | **Publish ADR-0017** (training stack + export/serving stack) — planned only; must exist before any training code | P0 | 2 (draft) / 3 (final) | §4.1, §5.4, §6, §7.6 | ⏸️ **PAUSED** — publishing is a `munod/tachyone` push, frozen by WS-B-022 |
 | WS-B-004 | Contamination **overlap audit** record for `Tachyone-SLM-Mixture-v1` (prompts + temperature-fit val split vs eval sets) | P0 | 1 | §3.3, §8 | Open |
 | WS-B-005 | Golden-hash idempotence test + deterministic train/val split wired into `pytest` | P1 | 1 | §3.3 | Open |
 | WS-B-006 | Temperature-scaling fit per (primitive, language) with ECE + Brier + `Conf` reported together | P0 | 4 | §3.5, §7.4 | Open |
@@ -31,6 +31,7 @@
 | WS-B-019 | **Publish `Tachyone-SLM-Mixture-v1` to Hugging Face** — dataset card + files; only on explicit request, nothing uploads automatically | P2 | 1 → 5 | §3.3, §7.6 | ✅ Done (2026-10-04) — [`datasets/munod/tachyone_slm_mixture_v1`](https://huggingface.co/datasets/munod/tachyone_slm_mixture_v1), `load_dataset` verified |
 | WS-B-020 | Public-probe contamination audit (`typed-decisions`/`MASSIVE`/`XNLI`) — recorded as `skipped — absent locally`; re-run when probe data exists | P3 | 5 | §3.3, §8 | Open — structural argument recorded instead |
 | WS-B-021 | `noul` is the thinnest primitive after dedup (**13,607** pairs vs 19,131 `choice`) and `en`×`support` the smallest cell (451) — Phase 2 must gate on these worst cells (§3.2) | P2 | 2 | §3.2, §7.2 | Open — surfaced by DAT-07 |
+| WS-B-022 | 🔴 **FREEZE until JevBench #182 closes + board published**: no pushes to `munod/tachyone` (code/docs/ADR/release), no HF revision changes on `tachyone-en`, no edits to #182. Re-run the reachability audit on resume | **P0** | — | `docs/jevbench-noninterference.md` | Open — owner decision 2026-10-04 |
 
 ---
 

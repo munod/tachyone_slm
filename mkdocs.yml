@@ -10,6 +10,7 @@ nav:
   - PRD (v1.2.0): tachyone_prd.md
   - Phase 0 Baseline: phase0-baseline.md
   - Dataset Card (SLM Mixture v1): slm-mixture-v1.md
+  - JevBench Non-Interference: jevbench-noninterference.md
   - Architecture: architecture.md
   - Execution Plan: plan.md
   - Model Card (template): model-card.md

@@ -1,7 +1,7 @@
 # State
 
 **Last Updated:** 2026-10-04
-**Current Work:** **Phase 1 delivered** — `Tachyone-SLM-Mixture-v1` (50,180 clean SFT pairs, audit pass, 16 tests green); next: **ADR-0017 gate** then Phase 2 training (PRD §6)
+**Current Work:** ⏸️ **PROJECT PAUSED** — awaiting **JevBench `fstandhartinger/jevbench#182` evaluation + board publication** (trigger defined 2026-10-04). Freeze: no pushes to `munod/tachyone`, no issue edits (see `docs/jevbench-noninterference.md`). On resume: reload `.specs/HANDOFF.md` → re-run the reachability audit → ADR-0017 (with go-ahead) → Phase 2.
 
 > **ID convention:** decisions/blockers/lessons created **in this workspace** use the `WS-` prefix (`WS-AD-NNN`, `WS-B-NNN`, `WS-L-NNN`) so they never collide with the canonical `AD-009`, `B-5…B-13`, `L-005…L-016` IDs owned by the upstream repository `munod/tachyone` (see PRD §10). Upstream IDs are **referenced, not duplicated**.
 
@@ -92,6 +92,15 @@
 **Impact:** training code must not be written before the stack ADR exists (PRD §6 Fase 2: "ADR-0017 antes de codar").
 **Workaround:** none (intentional gate).
 **Resolution:** draft → review → publish ADR-0017 in `munod/tachyone` at the start of Phase 2 (decision criteria in DEC-002).
+**Status:** **PAUSED 2026-10-04** — publishing it is a push to `munod/tachyone`, which is frozen until #182 closes (WS-B-022).
+
+### WS-B-022: 🔴 FREEZE — JevBench #182 evaluation pending (2026-10-04)
+
+**Discovered:** 2026-10-04 (audit `docs/jevbench-noninterference.md`, 7/7 pass)
+**Impact:** `munod/tachyone` is untouchable — no pushes (code/docs/ADR/release), no HF revision changes on `tachyone-en`, no edits to issue #182. Reason: the issue's inference snippet clones `main` **without a checkout** (the body does declare pin `538ac68`, but a literal re-run would follow `main`), and the maintainer is running *"reachability checks"*.
+**Workaround:** all work continues in **this** repo (`munod/tachyone_slm`) — disjoint from the evaluation surface (matrix §3).
+**Resolution:** **#182 closed + board published** → re-run the audit (§2 of the report) → resume with ADR-0017 (explicit go-ahead) → Phase 2.
+**Owner decisions (2026-10-04):** upstream untouched · this repo may receive pushes · trigger = closed + published · issue stays untouched.
 
 ---
 
@@ -151,10 +160,12 @@
 
 ## Todos
 
+- [ ] ⏸️ **FREEZE until JevBench #182 closes + board published** (WS-B-022) — no `munod/tachyone` pushes, no #182 edits; evidence in `docs/jevbench-noninterference.md`
+- [ ] On resume: **re-run the reachability audit** before anything else (pins may have moved)
 - [x] Run Phase 0 baselines and fix numeric accuracy targets in PRD §2 — **done 2026-10-03** (PRD v1.2.0)
 - [x] Build `Tachyone-SLM-Mixture-v1` (config, dedup, split, render, audit, provenance) — **done 2026-10-04** (DAT-01…08)
 - [ ] **Appro PRD v1.2.0** (maintainer) — closes Phase 0
-- [ ] Publish ADR-0017 (training/export stack) + schema annex (PRD §5.4) in `munod/tachyone` — **gates Phase 2**
+- [ ] Publish ADR-0017 (training/export stack) + schema annex (PRD §5.4) in `munod/tachyone` — **gates Phase 2 — FROZEN by WS-B-022**
 - [x] Publish `Tachyone-SLM-Mixture-v1` to HF — **done 2026-10-04** (`datasets/munod/tachyone_slm_mixture_v1`; model repo `munod/tachyone_slm` reserved for weights)
 - [ ] Fill `docs/model-card.md` placeholders in Phase 5
 - [ ] Add the SLM engine row to `benchmarks/compare.py` (Phase 5)

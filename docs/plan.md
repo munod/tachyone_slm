@@ -1,7 +1,10 @@
 # Execution Plan — Phases 0–5
 
+> ⏸️ **PAUSED (2026-10-04)** — see `docs/jevbench-noninterference.md` (freeze until JevBench
+> #182 closes + board published) and `.specs/HANDOFF.md` (resume protocol).
 > Derived from **PRD v1.2.0** (`tachyone_prd.md`) §6 (plan), §7 (acceptance), §8 (risks), §9 (traceability).
-> Status of every phase: **Phase 0 ✅ (2026-10-03)** and **Phase 1 ✅ (2026-10-04)** complete; Phases 2–5 **PLANNED** (Phase 2 gated by ADR-0017) — see `.specs/project/ROADMAP.md` for live status.
+> Status of every phase: **Phase 0 ✅ (2026-10-03)** and **Phase 1 ✅ (2026-10-04)** complete;
+> Phases 2–5 **PAUSED** (WS-B-022; Phase 2 also gated by ADR-0017) — see `.specs/project/ROADMAP.md`.
 
 ---
 
